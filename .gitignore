@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.env
+.env.local
+*.log
+.DS_Store
+.vercel
+
+# managed/ is committed on purpose: the compiled circuits and keys are part of
+# the deliverable, and CI checks they still match the source.
+public/zk/

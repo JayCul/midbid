@@ -1,0 +1,61 @@
+{
+  "name": "midbid",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Midbid: private bidding auctions on Midnight. See the price. Not the bidder.",
+  "scripts": {
+    "compact": "npm run compact:auction && npm run compact:registry",
+    "compact:auction": "compact compile src/contracts/auction.compact managed/auction",
+    "compact:registry": "compact compile src/contracts/registry.compact managed/registry",
+    "provenance": "node scripts/provenance.js",
+    "sync:zk": "node scripts/sync-zk.js",
+    "dev": "npm run sync:zk && npm run provenance && vite",
+    "build": "npm run sync:zk && npm run provenance && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:contracts": "vitest run test/contracts",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "npm run typecheck && prettier --check \"src/**/*.{js,ts,tsx,css}\" \"test/**/*.js\" \"scripts/**/*.{js,mjs}\"",
+    "format": "prettier --write \"src/**/*.{js,ts,tsx,css}\" \"test/**/*.js\" \"scripts/**/*.{js,mjs}\"",
+    "proof-server": "docker run --rm -p 6300:6300 midnightntwrk/proof-server:8.1.0 midnight-proof-server -v",
+    "deploy:preprod": "node scripts/deploy-preprod.mjs",
+    "find": "node scripts/find-auction.mjs"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^16.1.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^4.7.0",
+    "autoprefixer": "^10.5.5",
+    "jsdom": "^25.0.1",
+    "postcss": "^8.5.28",
+    "prettier": "^3.4.2",
+    "tailwindcss": "^3.4.19",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.21",
+    "vite-plugin-node-polyfills": "^0.28.0",
+    "vite-plugin-wasm": "^3.6.0",
+    "vitest": "^2.1.8"
+  },
+  "dependencies": {
+    "@midnight-ntwrk/compact-js": "^2.5.1",
+    "@midnight-ntwrk/compact-runtime": "0.16.0",
+    "@midnight-ntwrk/dapp-connector-api": "^4.0.1",
+    "@midnight-ntwrk/midnight-js-contracts": "^4.1.1",
+    "@midnight-ntwrk/midnight-js-fetch-zk-config-provider": "^4.1.1",
+    "@midnight-ntwrk/midnight-js-http-client-proof-provider": "^4.1.1",
+    "@midnight-ntwrk/midnight-js-indexer-public-data-provider": "^4.1.1",
+    "@midnight-ntwrk/midnight-js-level-private-state-provider": "^4.1.1",
+    "@midnight-ntwrk/midnight-js-network-id": "^4.1.1",
+    "@midnight-ntwrk/midnight-js-types": "^4.1.1",
+    "framer-motion": "^13.2.0",
+    "lucide-react": "^1.43.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "overrides": {
+    "@midnight-ntwrk/onchain-runtime-v3": "3.0.0"
+  }
+}

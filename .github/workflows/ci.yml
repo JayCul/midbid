@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contracts:
+    name: Compile contracts and check committed artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Compact toolchain
+        run: |
+          curl --proto '=https' --tlsv1.2 -LsSf https://github.com/midnightntwrk/compact/releases/latest/download/compact-installer.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      # 0.31 is the line that targets the ledger Mainnet runs today.
+      - name: Pin toolchain to the Mainnet compatible line
+        run: compact update 0.31
+
+      - name: Compile auction and registry
+        run: |
+          compact compile src/contracts/auction.compact managed/auction
+          compact compile src/contracts/registry.compact managed/registry
+
+      # Compilation is deterministic, so the committed circuits, keys and
+      # generated code must match the source exactly. This is what makes the
+      # circuit commitment stored in every auction reproducible from source.
+      - name: Committed artifacts match source
+        run: git diff --exit-code -- managed
+
+  app:
+    name: Lint, test and build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Provenance matches committed circuits
+        run: npm run provenance && git diff --exit-code -- src/provenance.js
+
+      - name: Lint and typecheck
+        run: npm run lint
+
+      - name: Contract tests
+        run: npm run test:contracts
+
+      - name: All tests
+        run: npm test
+
+      - name: Build
+        run: npm run build

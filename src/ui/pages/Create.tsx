@@ -170,7 +170,7 @@ export default function Create({ api }: { api: MidbidApi }) {
                 i < step
                   ? 'bg-good/20 text-good'
                   : i === step
-                    ? 'bg-accent text-white'
+                    ? 'bg-accent text-accent-ink'
                     : 'border border-line text-muted'
               }`}
             >

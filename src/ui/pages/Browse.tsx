@@ -49,7 +49,7 @@ export default function Browse({ api }: { api: MidbidApi }) {
           <p className="eyebrow">Browse</p>
           <h1 className="mt-2 text-4xl font-semibold tracking-tight">Auctions</h1>
           <p className="mt-2 max-w-lg text-sm text-muted">
-            Every auction here is a contract on Preprod carrying Midbid&apos;s circuit commitment.
+            Every auction here is a contract on Preprod carrying MidBid&apos;s circuit commitment.
             Prices are public. Bidders are not.
           </p>
         </div>

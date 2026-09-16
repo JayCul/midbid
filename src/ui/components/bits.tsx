@@ -116,18 +116,46 @@ export function ThemeToggle({ theme, onToggle }: { theme: Theme; onToggle: () =>
   );
 }
 
-export function Logo({ size = 28 }: { size?: number }) {
+/** MidBid mark: a folded gold M over a gavel. Colours are the brand's, not theme tokens. */
+export function LogoMark({ size = 30 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden>
+    <svg
+      width={size}
+      height={Math.round((size * 58) / 64)}
+      viewBox="0 0 64 58"
+      fill="none"
+      aria-hidden
+    >
       <defs>
-        <linearGradient id="mb-g" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="rgb(var(--accent))" />
-          <stop offset="1" stopColor="rgb(var(--accent-2))" />
+        <linearGradient id="mb-gold-ui" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#FFE14D" />
+          <stop offset="0.5" stopColor="#FFCC15" />
+          <stop offset="1" stopColor="#F59E0B" />
         </linearGradient>
       </defs>
-      <circle cx="32" cy="32" r="22" fill="none" stroke="url(#mb-g)" strokeWidth="6" />
-      <path d="M32 10a22 22 0 0 1 0 44a14 22 0 0 0 0-44z" fill="url(#mb-g)" />
+      <path
+        fill="url(#mb-gold-ui)"
+        d="M4 50V11c0-5 5-7.5 9-4.6L32 20.5 51 6.4C55 3.5 60 6 60 11v39l-9-6.5V21.5L32 32 13 21.5v22Z"
+      />
+      <path fill="#000" fillOpacity=".2" d="M13 21.5 32 32v5.5L13 27Z" />
+      <g fill="url(#mb-gold-ui)" stroke="rgb(var(--bg))" strokeWidth="1.6" paintOrder="stroke">
+        <rect x="30.6" y="41" width="3" height="13" rx="1.5" transform="rotate(-45 32.1 47.5)" />
+        <rect x="20.5" y="36.5" width="12" height="6" rx="1.5" transform="rotate(-45 26.5 39.5)" />
+      </g>
+      <rect x="17" y="53.5" width="17" height="3" rx="1.5" fill="url(#mb-gold-ui)" />
     </svg>
+  );
+}
+
+/** Mark plus wordmark: "Mid" in ink, "Bid" in gold. */
+export function Logo({ size = 30, className = '' }: { size?: number; className?: string }) {
+  return (
+    <span className={`inline-flex items-center gap-2 ${className}`}>
+      <LogoMark size={size} />
+      <span className="font-display text-xl font-bold tracking-tight">
+        Mid<span className="text-gradient">Bid</span>
+      </span>
+    </span>
   );
 }
 

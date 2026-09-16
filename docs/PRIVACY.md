@@ -1,9 +1,9 @@
 # Privacy model
 
-Midbid's claim is narrow and deliberate: **contract state reveals the price, never the
+MidBid's claim is narrow and deliberate: **contract state reveals the price, never the
 bidder.** This document sets out exactly what that covers and what it does not.
 
-Midbid uses the terms *private bidding*, *private bidder identity* and *selective
+MidBid uses the terms *private bidding*, *private bidder identity* and *selective
 disclosure*. It does not claim anonymity.
 
 ## What each party learns
@@ -37,7 +37,7 @@ Learns the same as anyone else. The seller cannot see who is bidding. After the 
 claims, the winner and seller arrange the exchange off chain, and at that point the winner
 chooses what to reveal to the seller. That is the selective disclosure step.
 
-### The Midbid app and its host
+### The MidBid app and its host
 
 The app has no backend. Secrets and bid history are stored in the browser's encrypted
 private state store, scoped to the wallet account and to each auction's address. The hosting
@@ -78,7 +78,7 @@ These are real and stated plainly.
 1. **The fee payer can be visible.** Every transaction is balanced and paid by the bidder's
    own Lace wallet. Contract state never names the bidder, but chain analysis of fee
    payments and transaction timing may link a bid transaction to a wallet. Removing this
-   needs relayed or sponsored submission, which is on the roadmap. Until then, Midbid keeps
+   needs relayed or sponsored submission, which is on the roadmap. Until then, MidBid keeps
    bidder identity out of *contract state* and does not claim to hide *network-level
    metadata*.
 2. **Timing correlation.** The high bid changes the moment a bid lands. Someone who knows

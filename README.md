@@ -1,12 +1,14 @@
-# Midbid
+<p align="center"><img src="public/logo.svg" alt="MidBid" width="360"></p>
+
+# MidBid
 
 **See the price. Not the bidder.**
 
 [![CI](https://github.com/JayCul/midbid/actions/workflows/ci.yml/badge.svg)](https://github.com/JayCul/midbid/actions/workflows/ci.yml)
-![Network](https://img.shields.io/badge/network-Midnight%20Preprod-8b7bff)
-![Compact](https://img.shields.io/badge/Compact-0.31.1-38bdf8)
+![Network](https://img.shields.io/badge/network-Midnight%20Preprod-FFCC15)
+![Compact](https://img.shields.io/badge/Compact-0.31.1-F59E0B)
 
-Midbid is a live auction marketplace on [Midnight](https://midnight.network). Everyone sees
+MidBid is a live auction marketplace on [Midnight](https://midnight.network). Everyone sees
 the current high bid. Nobody sees who placed it. The auction's rules run in a Compact
 contract, and the winner only steps forward once the auction has ended.
 
@@ -26,7 +28,7 @@ An ascending auction needs a public price, so bids can be beaten. It does not ne
 bidder. On a transparent chain, every bid is tied to an account, so anyone can watch who is
 bidding, how they bid and how high they go, and use that against them.
 
-Midbid uses Midnight to split those apart:
+MidBid uses Midnight to split those apart:
 
 - A bid publishes the **new price** and a **fresh commitment** to the bidder's secret. No
   account, name or key is written to contract state.
@@ -38,7 +40,7 @@ Midbid uses Midnight to split those apart:
 
 The honest limits are in [docs/PRIVACY.md](docs/PRIVACY.md). The short version: contract
 state reveals nothing about bidders, but the wallet paying a transaction's fee can still be
-visible to network-level analysis, and Midbid does not claim otherwise.
+visible to network-level analysis, and MidBid does not claim otherwise.
 
 ## How it works
 
@@ -47,7 +49,7 @@ sequenceDiagram
     autonumber
     actor Seller
     actor Bidder
-    participant App as Midbid app
+    participant App as MidBid app
     participant PS as Local proof server
     participant Lace
     participant Auction as Auction contract
@@ -116,7 +118,7 @@ itself, so the UI deriving them cannot loosen a rule.
 - Winner claim, unsold closing, seller settlement and seller cancellation before any bid
 - My activity: the auctions this browser created or bid in
 - Activity log showing every wallet, proof and network step
-- Dark-first responsive design with a light theme, keyboard focus states and reduced motion
+- Black and gold responsive design with a light theme, keyboard focus states and reduced motion
 
 ## Quick start
 
@@ -171,7 +173,7 @@ All are optional and documented in [.env.example](.env.example).
 
 No variable holds a seed or key. Lace signs every transaction.
 
-## Using Midbid
+## Using MidBid
 
 1. **Connect.** Start the proof server, open the app, click Connect and approve in Lace. On
    the hosted site, Chrome asks to let the page reach apps on your device; allow it so the

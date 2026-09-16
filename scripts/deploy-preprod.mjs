@@ -1,6 +1,6 @@
 // Pre-deploy check for the Preprod web app.
 //
-// Midbid has no server-side deploy key: contracts are deployed from the browser
+// MidBid has no server-side deploy key: contracts are deployed from the browser
 // and signed by Lace, so there is nothing for a script to sign. What can go
 // wrong before shipping the site is configuration, and that is what this checks:
 // the build's registry exists on Preprod, the circuits match the source, and the

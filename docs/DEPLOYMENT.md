@@ -1,7 +1,7 @@
 # Deployment
 
-Midbid has no server and no deploy key. Contracts are deployed from the browser and signed by
-Lace. Deploying Midbid means: one registry contract on Preprod, then the static site.
+MidBid has no server and no deploy key. Contracts are deployed from the browser and signed by
+Lace. Deploying MidBid means: one registry contract on Preprod, then the static site.
 
 ## 1. Prerequisites
 

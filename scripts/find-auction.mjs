@@ -1,4 +1,4 @@
-// Reads a Midbid auction or registry straight from the Preprod indexer and
+// Reads a MidBid auction or registry straight from the Preprod indexer and
 // checks it is genuine, without the app or a wallet.
 //
 //   node scripts/find-auction.mjs <auctionAddress>
@@ -65,7 +65,7 @@ try {
   genuine = false;
 }
 if (!genuine) {
-  console.log('  genuine  NO, not a Midbid auction built from managed/auction');
+  console.log('  genuine  NO, not a MidBid auction built from managed/auction');
   process.exit(1);
 }
 console.log(`  status   ${STATUS[l.status]}`);

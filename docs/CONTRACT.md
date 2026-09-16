@@ -86,7 +86,7 @@ The app maps these to user-facing text in `explainFailure`
 
 `list(auction)` asserts the address is not already listed, inserts it and increments the
 count. Anyone may list anything; the app decodes each listed address and shows it only if its
-stored `circuitCommitment` matches Midbid's.
+stored `circuitCommitment` matches MidBid's.
 
 ## Provenance
 

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Midbid: private bidding auctions on Midnight. See the price. Not the bidder.",
+  "description": "MidBid: private bidding auctions on Midnight. See the price. Not the bidder.",
   "scripts": {
     "compact": "npm run compact:auction && npm run compact:registry",
     "compact:auction": "compact compile src/contracts/auction.compact managed/auction",

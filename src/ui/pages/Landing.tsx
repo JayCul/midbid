@@ -64,7 +64,7 @@ export default function Landing({ api }: { api: MidbidApi }) {
 
       <section className="mx-auto max-w-canvas px-4 sm:px-6" aria-labelledby="how">
         <h2 id="how" className="text-2xl font-semibold tracking-tight sm:text-3xl">
-          How a Midbid auction works
+          How a MidBid auction works
         </h2>
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           {[
@@ -138,7 +138,7 @@ export default function Landing({ api }: { api: MidbidApi }) {
             <ShieldCheck size={15} className="mt-0.5 shrink-0 text-accent" aria-hidden />
             <p>
               Honest limit: the wallet that pays a transaction's fee can still be visible to chain
-              analysis. Midbid keeps bidder identity out of contract state; it does not claim to
+              analysis. MidBid keeps bidder identity out of contract state; it does not claim to
               hide network-level metadata. Read the{' '}
               <a
                 className="underline hover:text-ink"

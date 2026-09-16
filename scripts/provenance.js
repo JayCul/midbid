@@ -1,7 +1,7 @@
 // Computes the circuit commitment every auction writes into ledger state at
 // deploy: one hash over each auction circuit's verifier key (see
 // circuit-commitment.mjs). The app only shows contracts carrying this value,
-// so a contract with a similar layout cannot pass itself off as a Midbid
+// so a contract with a similar layout cannot pass itself off as a MidBid
 // auction.
 import { writeFileSync } from 'node:fs';
 import { circuitCommitmentOf, verifierKeys } from './circuit-commitment.mjs';

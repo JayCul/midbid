@@ -79,7 +79,7 @@ const txRef = (result) => ({
 });
 
 /**
- * Decodes an auction's public ledger and refuses anything that is not a Midbid
+ * Decodes an auction's public ledger and refuses anything that is not a MidBid
  * auction built from these exact circuits.
  */
 export function decodeAuction(address, contractState, now) {
@@ -89,10 +89,10 @@ export function decodeAuction(address, contractState, now) {
     void l.endsAt;
     void l.leader;
   } catch {
-    throw new Error(`${address.slice(0, 10)}... is not a Midbid auction.`);
+    throw new Error(`${address.slice(0, 10)}... is not a MidBid auction.`);
   }
   if (toHex(l.circuitCommitment) !== PROVENANCE.circuitCommitment) {
-    throw new Error(`${address.slice(0, 10)}... was not built from Midbid's audited circuits.`);
+    throw new Error(`${address.slice(0, 10)}... was not built from MidBid's audited circuits.`);
   }
   const base = {
     address,
@@ -147,13 +147,13 @@ export class AuctionService {
   async registryListings(registry = REGISTRY_ADDRESS) {
     if (!registry) return [];
     const state = await this.publicDataProvider.queryContractState(registry);
-    if (!state) throw new Error('The Midbid registry was not found on Preprod.');
+    if (!state) throw new Error('The MidBid registry was not found on Preprod.');
     const l = Registry.ledger(state.data);
     return Array.from(l.listings, (bytes) => toHex(bytes));
   }
 
   /**
-   * Every listed auction that decodes and carries Midbid's circuit commitment.
+   * Every listed auction that decodes and carries MidBid's circuit commitment.
    * Anything else in the registry is skipped, not shown.
    */
   /** @param {{ extra?: string[] }} [opts] */
@@ -260,7 +260,7 @@ export class AuctionService {
 
   /** Deploys an empty registry. Done once per environment by an operator. */
   async deployRegistry() {
-    this.log('Deploying a Midbid registry. Approve in Lace.');
+    this.log('Deploying a MidBid registry. Approve in Lace.');
     const deployed = await deployContract(this.providers('registry'), {
       compiledContract: compiledRegistry,
       args: [],

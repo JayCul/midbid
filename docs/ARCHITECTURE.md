@@ -1,6 +1,6 @@
 # Architecture
 
-Midbid is a static single-page app talking to Midnight Preprod. There is no backend.
+MidBid is a static single-page app talking to Midnight Preprod. There is no backend.
 
 ```mermaid
 flowchart LR

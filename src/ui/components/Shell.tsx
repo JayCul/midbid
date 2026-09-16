@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Code2, LogOut, Menu, ScrollText, Wallet, X } from 'lucide-react';
 import type { MidbidApi } from '../useMidbid';
 import type { Theme } from '../useTheme';
-import { Logo, Notice, ThemeToggle, short } from './bits';
+import { Logo, LogoMark, Notice, ThemeToggle, short } from './bits';
 
 // Set VITE_X_PROFILE_URL once the product profile exists; the link hides until then.
 export const X_PROFILE_URL: string | undefined = import.meta.env.VITE_X_PROFILE_URL || undefined;
@@ -32,9 +32,8 @@ export function Header({
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-canvas/80 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-canvas items-center gap-4 px-4 sm:px-6">
-        <a href="#/" className="flex items-center gap-2.5" aria-label="Midbid home">
+        <a href="#/" className="flex items-center gap-2.5" aria-label="MidBid home">
           <Logo />
-          <span className="font-display text-lg font-semibold tracking-tight">Midbid</span>
           <span className="hidden rounded-md border border-line px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted sm:inline">
             Preprod
           </span>
@@ -162,7 +161,7 @@ export function Readiness({ api, action }: { api: MidbidApi; action: string }) {
     return (
       <div className="flex flex-col gap-3 rounded-xl border border-line bg-surface p-4">
         <p className="text-sm text-muted">
-          Connect Lace on Preprod to {action}. Midbid never sees your seed; Lace signs every
+          Connect Lace on Preprod to {action}. MidBid never sees your seed; Lace signs every
           transaction.
         </p>
         <ConnectButton api={api} full />
@@ -268,8 +267,8 @@ export function Footer() {
     <footer className="mt-24 border-t border-line">
       <div className="mx-auto flex max-w-canvas flex-col gap-4 px-4 py-10 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <div className="flex items-center gap-2">
-          <Logo size={20} />
-          <span>Midbid runs on Midnight Preprod. Test tokens only.</span>
+          <LogoMark size={20} />
+          <span>MidBid runs on Midnight Preprod. Test tokens only.</span>
         </div>
         <div className="flex items-center gap-4">
           <a

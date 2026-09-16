@@ -24,16 +24,13 @@ export function describeError(err) {
 
   try {
     const seen = new WeakSet();
-    const json = JSON.stringify(
-      err,
-      (_k, v) => {
-        if (typeof v === 'object' && v !== null) {
-          if (seen.has(v)) return '[circular]';
-          seen.add(v);
-        }
-        return typeof v === 'bigint' ? String(v) : v;
-      },
-    );
+    const json = JSON.stringify(err, (_k, v) => {
+      if (typeof v === 'object' && v !== null) {
+        if (seen.has(v)) return '[circular]';
+        seen.add(v);
+      }
+      return typeof v === 'bigint' ? String(v) : v;
+    });
     if (json && json !== '{}') return json.slice(0, 400);
   } catch {
     /* fall through */
@@ -88,10 +85,7 @@ export const traceObject = (name, obj, methods, log) => {
 export const installGlobalErrorLogging = (log) => {
   window.addEventListener('unhandledrejection', (event) => {
     const err = event.reason;
-    log(
-      `unhandled rejection: ${err?.name ?? 'Error'}: ${err?.message ?? String(err)}`,
-      'err',
-    );
+    log(`unhandled rejection: ${err?.name ?? 'Error'}: ${err?.message ?? String(err)}`, 'err');
     console.error('unhandledrejection', err);
   });
   window.addEventListener('error', (event) => {

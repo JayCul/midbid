@@ -6,11 +6,7 @@
 // this repo or its environment.
 
 import { PREPROD } from '../config.js';
-import {
-  encodeForWallet,
-  decodeFromWallet,
-  watchIdentifier,
-} from './txcodec.js';
+import { encodeForWallet, decodeFromWallet, watchIdentifier } from './txcodec.js';
 import { describeError } from './instrument.js';
 
 const NETWORK_ID = PREPROD.networkId;
@@ -28,9 +24,7 @@ export async function findLace({ timeoutMs = 5000 } = {}) {
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
     const wallets = window.midnight ?? {};
-    const entry = Object.values(wallets).find(
-      (w) => w && typeof w.connect === 'function',
-    );
+    const entry = Object.values(wallets).find((w) => w && typeof w.connect === 'function');
     if (entry) return entry;
     await new Promise((r) => setTimeout(r, 200));
   }
@@ -70,10 +64,9 @@ export async function connectLace() {
     // pays fees, prompting the user. midnight-js expects a transaction object
     // back, not a string, so the wallet's response is parsed before returning.
     balanceTx: async (tx) => {
-      const { tx: balanced } = await api.balanceUnsealedTransaction(
-        encodeForWallet(tx),
-        { payFees: true },
-      );
+      const { tx: balanced } = await api.balanceUnsealedTransaction(encodeForWallet(tx), {
+        payFees: true,
+      });
       return decodeFromWallet(balanced);
     },
   };

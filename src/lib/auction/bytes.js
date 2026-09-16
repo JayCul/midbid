@@ -1,5 +1,4 @@
-export const toHex = (bytes) =>
-  Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+export const toHex = (bytes) => Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
 
 export const fromHex = (hex) => {
   const clean = String(hex).trim().toLowerCase().replace(/^0x/, '');

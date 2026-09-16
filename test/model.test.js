@@ -55,25 +55,46 @@ describe('bid checks mirror the circuit', () => {
 describe('create form', () => {
   it('builds contract terms in seconds', () => {
     const t = buildTerms({ startingBid: '50', minIncrement: '5', durationSeconds: 3600 }, NOW);
-    expect(t).toEqual({ startingBid: 50n, minIncrement: 5n, startsAt: BigInt(NOW), endsAt: BigInt(NOW + 3600) });
+    expect(t).toEqual({
+      startingBid: 50n,
+      minIncrement: 5n,
+      startsAt: BigInt(NOW),
+      endsAt: BigInt(NOW + 3600),
+    });
   });
 
   it('rejects terms the contract would refuse', () => {
-    expect(() => buildTerms({ startingBid: '0', minIncrement: '5', durationSeconds: 3600 })).toThrow(/above zero/);
-    expect(() => buildTerms({ startingBid: '1.5', minIncrement: '5', durationSeconds: 3600 })).toThrow(/whole number/);
-    expect(() => buildTerms({ startingBid: '5', minIncrement: '5', durationSeconds: 60 })).toThrow(/at least 5 minutes/);
+    expect(() =>
+      buildTerms({ startingBid: '0', minIncrement: '5', durationSeconds: 3600 }),
+    ).toThrow(/above zero/);
+    expect(() =>
+      buildTerms({ startingBid: '1.5', minIncrement: '5', durationSeconds: 3600 }),
+    ).toThrow(/whole number/);
+    expect(() => buildTerms({ startingBid: '5', minIncrement: '5', durationSeconds: 60 })).toThrow(
+      /at least 5 minutes/,
+    );
   });
 
   it('keeps metadata to public listing fields and validates them', () => {
-    const json = buildMetadata({ title: '  Rare print ', category: 'Art', imageUrl: 'https://x.test/a.png' });
-    expect(JSON.parse(json)).toMatchObject({ title: 'Rare print', category: 'Art', settlement: 'manual' });
+    const json = buildMetadata({
+      title: '  Rare print ',
+      category: 'Art',
+      imageUrl: 'https://x.test/a.png',
+    });
+    expect(JSON.parse(json)).toMatchObject({
+      title: 'Rare print',
+      category: 'Art',
+      settlement: 'manual',
+    });
     expect(() => buildMetadata({ title: '' })).toThrow(/title/);
     expect(() => buildMetadata({ title: 'x', imageUrl: 'http://insecure' })).toThrow(/https/);
   });
 
   it('reads untrusted metadata defensively', () => {
     expect(parseMetadata('not json').title).toBe('Untitled auction');
-    expect(parseMetadata(JSON.stringify({ title: 'Ok', imageUrl: 'javascript:alert(1)' })).imageUrl).toBe('');
+    expect(
+      parseMetadata(JSON.stringify({ title: 'Ok', imageUrl: 'javascript:alert(1)' })).imageUrl,
+    ).toBe('');
   });
 });
 

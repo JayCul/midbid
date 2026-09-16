@@ -131,7 +131,8 @@ export function metadataProblems(meta) {
     problems.push(`Keep the description under ${METADATA_LIMITS.description} characters.`);
   if (meta.imageUrl && !/^https:\/\/\S+$/i.test(meta.imageUrl))
     problems.push('Image links must start with https://');
-  if (meta.imageUrl.length > METADATA_LIMITS.imageUrl) problems.push('That image link is too long.');
+  if (meta.imageUrl.length > METADATA_LIMITS.imageUrl)
+    problems.push('That image link is too long.');
   return problems;
 }
 
@@ -148,7 +149,13 @@ export function parseMetadata(raw) {
       settlement: 'manual',
     };
   } catch {
-    return { title: 'Untitled auction', description: '', category: 'Other', imageUrl: '', settlement: 'manual' };
+    return {
+      title: 'Untitled auction',
+      description: '',
+      category: 'Other',
+      imageUrl: '',
+      settlement: 'manual',
+    };
   }
 }
 
@@ -166,9 +173,13 @@ export const DURATION_PRESETS = [
  * Validates the create form and returns contract-ready terms.
  * `startDelay` is seconds from now; 0 opens immediately.
  */
-export function buildTerms({ startingBid, minIncrement, durationSeconds, startDelay = 0 }, now = nowSeconds()) {
+export function buildTerms(
+  { startingBid, minIncrement, durationSeconds, startDelay = 0 },
+  now = nowSeconds(),
+) {
   const toBig = (v, name) => {
-    if (v === '' || v == null || !/^\d+$/.test(String(v).trim())) throw new Error(`${name} must be a whole number.`);
+    if (v === '' || v == null || !/^\d+$/.test(String(v).trim()))
+      throw new Error(`${name} must be a whole number.`);
     return BigInt(String(v).trim());
   };
   const starting = toBig(startingBid, 'Starting bid');
@@ -176,7 +187,8 @@ export function buildTerms({ startingBid, minIncrement, durationSeconds, startDe
   if (starting <= 0n) throw new Error('Starting bid must be above zero.');
   if (increment <= 0n) throw new Error('Minimum increment must be above zero.');
   const duration = Number(durationSeconds);
-  if (!Number.isInteger(duration) || duration < 300) throw new Error('Auctions must run for at least 5 minutes.');
+  if (!Number.isInteger(duration) || duration < 300)
+    throw new Error('Auctions must run for at least 5 minutes.');
   if (duration > 30 * 86400) throw new Error('Auctions can run for at most 30 days.');
   // Times are in seconds, compared by the contract against block time. The
   // auction opens as soon as the deploy lands unless a delay is chosen.

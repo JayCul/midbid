@@ -22,9 +22,15 @@ import { toHex, fromHex, randomBytes32 } from './bytes.js';
 export const PRIVATE_STATE_ID = 'midbid';
 
 export const auctionWitnesses = {
-  bidderSecret: ({ privateState }) => [privateState, required(privateState.bidderSecret, 'bidder secret')],
+  bidderSecret: ({ privateState }) => [
+    privateState,
+    required(privateState.bidderSecret, 'bidder secret'),
+  ],
   bidNonce: ({ privateState }) => [privateState, required(privateState.nonce, 'bid nonce')],
-  sellerSecret: ({ privateState }) => [privateState, required(privateState.sellerSecret, 'seller secret')],
+  sellerSecret: ({ privateState }) => [
+    privateState,
+    required(privateState.sellerSecret, 'seller secret'),
+  ],
 };
 
 function required(value, name) {
@@ -45,13 +51,20 @@ export const compiledRegistry = CompiledContract.make('registry', Registry.Contr
 /** Maps a contract's revert message to something a bidder can act on. */
 export function explainFailure(err) {
   const text = String(err?.message ?? err);
+  /** @type {Array<[RegExp, string]>} */
   const known = [
-    [/bid is below the minimum/, 'Someone bid first. The minimum has moved; refresh and bid again.'],
+    [
+      /bid is below the minimum/,
+      'Someone bid first. The minimum has moved; refresh and bid again.',
+    ],
     [/auction has ended/, 'The auction ended before your bid landed.'],
     [/auction has not started/, 'The auction has not started yet.'],
     [/auction is not open/, 'This auction is no longer open.'],
     [/not the winning bid/, 'This device does not hold the winning bid.'],
-    [/only the seller/, 'Only the seller who created this auction can do that, from the device that created it.'],
+    [
+      /only the seller/,
+      'Only the seller who created this auction can do that, from the device that created it.',
+    ],
     [/cannot cancel after a bid/, 'An auction cannot be cancelled once someone has bid.'],
     [/auction already listed/, 'This auction is already listed.'],
   ];
@@ -81,7 +94,7 @@ export function decodeAuction(address, contractState, now) {
   if (toHex(l.circuitCommitment) !== PROVENANCE.circuitCommitment) {
     throw new Error(`${address.slice(0, 10)}... was not built from Midbid's audited circuits.`);
   }
-  const auction = {
+  const base = {
     address,
     metadata: parseMetadata(l.metadata),
     sellerKey: toHex(l.sellerKey),
@@ -95,17 +108,16 @@ export function decodeAuction(address, contractState, now) {
     bidCount: l.bidCount,
     leader: toHex(l.leader),
   };
-  auction.phase = deriveStatus(auction, now);
-  return auction;
+  return { ...base, phase: deriveStatus(base, now) };
 }
 
 export class AuctionService {
   /**
    * @param {object} opts
    * @param {object} opts.publicDataProvider  always present, needs no wallet
-   * @param {(name: 'auction'|'registry') => object} [opts.walletProviders]
+   * @param {any} [opts.walletProviders]
    *        full provider sets, present once a wallet is connected
-   * @param {(line: string, kind?: string) => void} [opts.log]
+   * @param {(line: string, kind?: any) => void} [opts.log]
    */
   constructor({ publicDataProvider, walletProviders = null, log = () => {} }) {
     this.publicDataProvider = publicDataProvider;
@@ -144,6 +156,7 @@ export class AuctionService {
    * Every listed auction that decodes and carries Midbid's circuit commitment.
    * Anything else in the registry is skipped, not shown.
    */
+  /** @param {{ extra?: string[] }} [opts] */
   async listAuctions({ extra = [] } = {}) {
     const listed = await this.registryListings().catch((err) => {
       this.log(`Could not read the registry: ${err.message}`, 'err');
@@ -281,7 +294,12 @@ export class AuctionService {
     const nonce = randomBytes32();
     // Stored before proving, so the nonce survives even if the page closes
     // while the wallet is approving. A bid is only marked confirmed afterwards.
-    const pending = { amount: String(amount), nonce: toHex(nonce), at: Date.now(), status: 'pending' };
+    const pending = {
+      amount: String(amount),
+      nonce: toHex(nonce),
+      at: Date.now(),
+      status: 'pending',
+    };
     await this.writePrivateState(address, {
       ...existing,
       bidderSecret,

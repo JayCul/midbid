@@ -35,9 +35,7 @@ describe('auction terms', () => {
       /starting bid must be above zero/,
     );
     expect(() => new AuctionSimulator({ minIncrement: 0n })).toThrow(/minimum increment/);
-    expect(() => new AuctionSimulator({ endsAt: BigInt(T0) })).toThrow(
-      /must end after it starts/,
-    );
+    expect(() => new AuctionSimulator({ endsAt: BigInt(T0) })).toThrow(/must end after it starts/);
   });
 });
 
@@ -103,9 +101,7 @@ describe('ending and winning', () => {
   });
 
   it('refuses a claim from an outbid bidder', () => {
-    expect(() => withBids().at(END).claimWin(alice, bytes32('a1'))).toThrow(
-      /not the winning bid/,
-    );
+    expect(() => withBids().at(END).claimWin(alice, bytes32('a1'))).toThrow(/not the winning bid/);
   });
 
   it('refuses a claim from someone who knows the nonce but not the secret', () => {

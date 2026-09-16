@@ -15,11 +15,9 @@ const HEX = /^[0-9a-fA-F]+$/;
 export const bytesToHex = (bytes) =>
   Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
 
-const hexToBytes = (hex) =>
-  new Uint8Array(hex.match(/../g).map((pair) => parseInt(pair, 16)));
+const hexToBytes = (hex) => new Uint8Array(hex.match(/../g).map((pair) => parseInt(pair, 16)));
 
-const base64ToBytes = (b64) =>
-  Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+const base64ToBytes = (b64) => Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
 
 /** Serializes whatever midnight-js handed us into the string the wallet wants. */
 export const encodeForWallet = (tx) => {
@@ -29,9 +27,7 @@ export const encodeForWallet = (tx) => {
     const raw = tx.serialize();
     return raw instanceof Uint8Array ? bytesToHex(raw) : String(raw);
   }
-  throw new Error(
-    `Cannot serialize transaction for the wallet: unexpected type ${typeof tx}`,
-  );
+  throw new Error(`Cannot serialize transaction for the wallet: unexpected type ${typeof tx}`);
 };
 
 /** Parses the wallet's serialized transaction back into a ledger Transaction. */
@@ -40,16 +36,12 @@ export const decodeFromWallet = (value) => {
     return value;
   }
   if (typeof value !== 'string') {
-    throw new Error(
-      `Wallet returned an unexpected transaction type: ${typeof value}`,
-    );
+    throw new Error(`Wallet returned an unexpected transaction type: ${typeof value}`);
   }
   // Even-length hex is the documented shape; base64 is accepted defensively
   // because the connector's encoding is not specified anywhere.
   const bytes =
-    HEX.test(value) && value.length % 2 === 0
-      ? hexToBytes(value)
-      : base64ToBytes(value);
+    HEX.test(value) && value.length % 2 === 0 ? hexToBytes(value) : base64ToBytes(value);
   return Transaction.deserialize(...MARKERS, bytes);
 };
 
@@ -60,9 +52,7 @@ export const decodeFromWallet = (value) => {
  */
 export const watchIdentifier = (tx) => {
   if (typeof tx?.identifiers !== 'function') {
-    throw new Error(
-      'Balanced transaction has no identifiers(); cannot watch for confirmation.',
-    );
+    throw new Error('Balanced transaction has no identifiers(); cannot watch for confirmation.');
   }
   const ids = tx.identifiers();
   if (!ids || ids.length === 0) {

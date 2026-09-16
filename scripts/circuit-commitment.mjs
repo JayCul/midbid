@@ -11,7 +11,9 @@ import { join } from 'node:path';
 export const KEYS_DIR = 'managed/auction/keys';
 
 export function verifierKeys(dir = KEYS_DIR) {
-  return readdirSync(dir).filter((f) => f.endsWith('.verifier')).sort();
+  return readdirSync(dir)
+    .filter((f) => f.endsWith('.verifier'))
+    .sort();
 }
 
 export function circuitCommitmentOf(dir = KEYS_DIR) {

@@ -25,8 +25,7 @@ export async function checkProofServer(url = PREPROD.proofServer, timeoutMs = 40
     }
     return { ok: true, url, detail: 'reachable' };
   } catch (err) {
-    const reason =
-      err.name === 'TimeoutError' ? 'timed out' : 'no response';
+    const reason = err.name === 'TimeoutError' ? 'timed out' : 'no response';
     return { ok: false, url, detail: reason };
   }
 }

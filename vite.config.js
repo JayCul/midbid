@@ -11,7 +11,7 @@ export default defineConfig({
   // support top-level await natively. The plugin's SWC pass fails on this
   // dependency graph and is not needed at this target.
   plugins: [react(), nodePolyfills(), wasm()],
-  server: { port: 5173 },
+  server: { port: Number(process.env.PORT) || 5174 },
   optimizeDeps: {
     // The WASM packages must not be pre-bundled; esbuild cannot handle their
     // wasm imports. Everything else is pre-bundled so Vite performs the

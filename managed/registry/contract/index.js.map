@@ -1,0 +1,8 @@
+{
+  "version": 3,
+  "file": "index.js",
+  "sourceRoot": "../../../",
+  "sources": ["src/contracts/registry.compact"],
+  "names": [],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;EAKA;;;;;;;;;;MAOA,AAAA,IAIC;;;;;cAJmB,SAAkB;;;;;;;;;;;;;;;;;;yCAAlB,SAAkB;;;;;;;iEAAlB,SAAkB;;;OAIrC;;;;GACA;EAZD;;;;;;;;;;;;;;;;;;;;;;;;;;;IAIA;;;;;;;;;;yEAAuC;IACvC;;;;;;;;;yEAAoC;;;;;;;GAOnC;EALD,AAAA,OAIC,4BAJmB,SAAkB;qDAC5B;;;;;;;;;;;4KAAyB,SAAO;;;;0HAAxB;;IAChB;;;;;;;;;;2HAAyB,SAAO;;;;;wEAAxB;UACR,KAAY;IAAZ;;;;;;;;;;6FAAA,KAAY;;;;wEAAA;;GACb;;;;;;;;;;;;;;;;IAPD;;;;;uCAAA;;;;;;;;;;;;;;;;4GAAuC;;;;;;uCAAvC;;;;;;;;;;;;4GAAuC;;;;;;;;;;;;;;uCAAvC;;;;;;;;;;;;;;;4GAAuC;;;;;;;;;KAAA;IACvC;qCAAA;;;;;;;;;;;0GAAoC;KAAA;;;;;;;;;;"
+}

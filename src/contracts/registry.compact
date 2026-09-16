@@ -1,0 +1,17 @@
+// Midbid registry: the list of auctions the app can browse.
+//
+// Discovery only. A listing is an address and nothing else; the app reads each
+// listed contract and checks its circuit commitment before showing it, so
+// listing a contract that is not a Midbid auction gains nothing.
+pragma language_version 0.23;
+
+import CompactStandardLibrary;
+
+export ledger listings: Set<Bytes<32>>;
+export ledger listingCount: Counter;
+
+export circuit list(auction: Bytes<32>): [] {
+  assert(!listings.member(disclose(auction)), "auction already listed");
+  listings.insert(disclose(auction));
+  listingCount.increment(1);
+}

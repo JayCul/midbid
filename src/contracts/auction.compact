@@ -1,0 +1,134 @@
+// Midbid auction. One deployment is one auction.
+//
+// See the price. Not the bidder.
+//
+// The current high bid is public, because an ascending auction needs a price
+// everyone can see and beat. Who placed it is not written anywhere: a bid
+// discloses its amount and a fresh commitment to the bidder's secret, and no
+// two bids from the same bidder share a commitment. At the end, the winner
+// proves they can open the leading commitment. That proof is the only moment a
+// bidder steps forward, and only the winner ever does.
+//
+// Every rule below is enforced here, not in the UI: timing against block time,
+// the minimum and increment, who may cancel or settle, and the order of status
+// transitions.
+pragma language_version 0.23;
+
+import CompactStandardLibrary;
+
+// Stored status. SCHEDULED, ACTIVE and ENDED are not stored: they are OPEN read
+// against block time, and every circuit checks block time itself, so the UI
+// deriving them cannot loosen a rule.
+export enum Status { OPEN, CANCELLED, UNSOLD, WON, SETTLED }
+
+// ---------------------------------------------------------------- terms ----
+// Written once by the constructor. Public so every bidder can audit the rules
+// they are bidding under.
+export ledger metadata: Opaque<"string">;
+export ledger sellerKey: Bytes<32>;
+export ledger startingBid: Uint<64>;
+export ledger minIncrement: Uint<64>;
+export ledger startsAt: Uint<64>;
+export ledger endsAt: Uint<64>;
+
+// Provenance: one hash over every circuit's verifier key, so the app can tell a
+// Midbid auction from any other contract that happens to share a layout.
+export ledger circuitCommitment: Bytes<32>;
+
+// ---------------------------------------------------------------- state ----
+export ledger status: Status;
+export ledger highBid: Uint<64>;
+export ledger bidCount: Counter;
+// Commitment to whoever currently leads. Changes on every accepted bid, and
+// never repeats for the same bidder, so it cannot be used to follow one bidder
+// through an auction.
+export ledger leader: Bytes<32>;
+
+// ------------------------------------------------------------ witnesses ----
+// Read from this device's encrypted private state. None of them reach the
+// chain except through the explicit disclose() calls below.
+witness bidderSecret(): Bytes<32>;
+witness bidNonce(): Bytes<32>;
+witness sellerSecret(): Bytes<32>;
+
+export pure circuit sellerPublicKey(secret: Bytes<32>): Bytes<32> {
+  return persistentHash<Vector<2, Bytes<32>>>([pad(32, "midbid:seller:v1"), secret]);
+}
+
+export pure circuit leaderCommitment(secret: Bytes<32>, nonce: Bytes<32>): Bytes<32> {
+  return persistentHash<Vector<3, Bytes<32>>>([pad(32, "midbid:leader:v1"), secret, nonce]);
+}
+
+constructor(
+  meta: Opaque<"string">,
+  seller: Bytes<32>,
+  starting: Uint<64>,
+  increment: Uint<64>,
+  opensAt: Uint<64>,
+  closesAt: Uint<64>,
+  circuits: Bytes<32>,
+) {
+  assert(starting > 0, "starting bid must be above zero");
+  assert(increment > 0, "minimum increment must be above zero");
+  assert(opensAt < closesAt, "auction must end after it starts");
+
+  metadata = disclose(meta);
+  sellerKey = disclose(seller);
+  startingBid = disclose(starting);
+  minIncrement = disclose(increment);
+  startsAt = disclose(opensAt);
+  endsAt = disclose(closesAt);
+  circuitCommitment = disclose(circuits);
+  status = Status.OPEN;
+  highBid = 0;
+}
+
+// Place a bid. The amount arrives as a private argument and is disclosed only
+// because it becomes the public price; a bid that would not lead is rejected
+// and never lands on chain.
+export circuit placeBid(amount: Uint<64>): [] {
+  assert(status == Status.OPEN, "auction is not open");
+  assert(blockTimeGte(startsAt), "auction has not started");
+  assert(blockTimeLt(endsAt), "auction has ended");
+
+  const minimum = bidCount.read() == 0 ? startingBid : highBid + minIncrement;
+  assert(disclose(amount) >= minimum, "bid is below the minimum");
+
+  highBid = disclose(amount);
+  leader = disclose(leaderCommitment(bidderSecret(), bidNonce()));
+  bidCount.increment(1);
+}
+
+// The winner steps forward after the auction ends by opening the leading
+// commitment. Nobody else can: it needs the secret and the nonce of that bid.
+export circuit claimWin(): [] {
+  assert(status == Status.OPEN, "auction is not open");
+  assert(blockTimeGte(endsAt), "auction has not ended");
+  assert(bidCount.read() > 0, "auction has no bids");
+  assert(disclose(leaderCommitment(bidderSecret(), bidNonce()) == leader), "not the winning bid");
+  status = Status.WON;
+}
+
+// Anyone may record that an auction ended without a bid.
+export circuit closeUnsold(): [] {
+  assert(status == Status.OPEN, "auction is not open");
+  assert(blockTimeGte(endsAt), "auction has not ended");
+  assert(bidCount.read() == 0, "auction has bids");
+  status = Status.UNSOLD;
+}
+
+// The seller confirms the item was handed over once the winner has claimed.
+export circuit settle(): [] {
+  assert(status == Status.WON, "no claimed winner to settle with");
+  assert(disclose(sellerPublicKey(sellerSecret()) == sellerKey), "only the seller can settle");
+  status = Status.SETTLED;
+}
+
+// The seller may withdraw an auction, but only before anyone has bid.
+export circuit cancel(): [] {
+  assert(status == Status.OPEN, "auction is not open");
+  assert(bidCount.read() == 0, "cannot cancel after a bid");
+  assert(blockTimeLt(endsAt), "auction has ended");
+  assert(disclose(sellerPublicKey(sellerSecret()) == sellerKey), "only the seller can cancel");
+  status = Status.CANCELLED;
+}

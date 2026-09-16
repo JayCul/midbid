@@ -2,11 +2,17 @@
 
 MidBid is a static single-page app talking to Midnight Preprod. There is no backend.
 
+The UI depends only on service interfaces. Two implementations sit behind them: the demo market
+(`MockAuctionService`, in memory, labelled everywhere it appears) and Midnight Preprod
+(`MidnightAuctionService` with `LaceWalletService`). The Midnight stack is loaded on demand, so
+the landing page never downloads the ledger WASM.
+
 ```mermaid
 flowchart LR
     subgraph Browser
-        UI[React pages] --> Hook[useMidbid]
-        Hook --> Service[AuctionService]
+        UI[Pages and sections] --> Hook[useMarket]
+        Hook --> Mock[MockAuctionService<br/>demo market]
+        Hook --> Service[MidnightAuctionService]
         Service --> PSP[(Encrypted private state)]
         Service --> ZK[FetchZkConfigProvider<br/>/zk/auction, /zk/registry]
     end
@@ -25,18 +31,22 @@ flowchart LR
 | Layer | Files | Responsibility |
 |---|---|---|
 | Contracts | `src/contracts/*.compact`, `managed/` | Rules, state, proofs |
-| Model | `src/lib/auction/model.js` | Pure functions: lifecycle, bid checks, metadata, terms |
-| Service | `src/lib/auction/service.js` | Every midnight-js call: deploy, find, call, read, private state |
-| Wallet | `src/lib/lace.js`, `src/lib/txcodec.js` | Lace connector to midnight-js wallet and midnight providers |
-| Hook | `src/ui/useMidbid.ts` | Session, providers, log, proof server status, local index |
-| Pages | `src/ui/pages/*` | Presentation only |
+| Types | `src/types/auction.ts` | The `Auction`, `Receipt` and `Position` every screen uses |
+| Interfaces | `src/services/types.ts` | `AuctionService`, `BidService`, `WalletService`, `ContractService` |
+| Demo market | `src/services/mock/`, `src/data/showcase.ts` | In-memory auctions with the contract's rules; receipts are `{ kind: 'demo' }` |
+| Midnight | `src/services/midnight/` | `MidnightAuctionService`, `LaceWalletService`, and `auctionClient.js` holding every midnight-js call |
+| Model | `src/lib/auction/model.js`, `view.ts` | Pure functions: lifecycle, bid checks, metadata, terms, formatting |
+| Wallet plumbing | `src/lib/midnight/` | Lace connector, transaction codec, tracing, proof server check |
+| State | `src/hooks/useMarket.tsx` | Active market, wallet, log, lazy loading of the Midnight stack |
+| Presentation | `src/components/`, `src/sections/`, `src/pages/` | No midnight-js imports anywhere |
 
-Pages never import midnight-js. They call the service through the hook, and the service
-returns plain objects and real transaction identifiers.
+Presentation never imports midnight-js. Pages call a service through `useMarket`. A Midnight
+receipt carries the identifier Lace returned; a demo receipt carries none, so the UI cannot show
+an invented transaction.
 
 ## Provider stack
 
-Built once per wallet connection in `useMidbid`:
+Built once per wallet connection in `LaceWalletService`:
 
 | Provider | Implementation | Notes |
 |---|---|---|

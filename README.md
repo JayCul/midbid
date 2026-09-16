@@ -108,17 +108,22 @@ itself, so the UI deriving them cannot loosen a rule.
 
 ## Features
 
-- Connect Lace on Preprod, with network, proof server and DUST checks before any action
+- A cinematic landing page: a Three.js hero scene that pauses off screen, a scroll-driven
+  price timeline, and a privacy comparison, all with reduced-motion fallbacks
+- A labelled demo market that runs with no wallet, beside live Midnight Preprod data
+- Connect Lace on Preprod from a wallet modal that only ever shows a masked address, with
+  network, proof server and DUST checks before any action
 - Create an auction in three steps with a live preview
-- Browse live and ended auctions, search, and open any auction by address
+- Explore live and ended auctions, search, and open any auction by address
 - Private bidding with contract-enforced minimum, increment, start and expiry
 - Live countdown and public high bid, refreshed from the indexer
 - A private "your position" panel computed only on your device: whether you lead, and your
   own bid history
 - Winner claim, unsold closing, seller settlement and seller cancellation before any bid
-- My activity: the auctions this browser created or bid in
-- Activity log showing every wallet, proof and network step
-- Black and gold responsive design with a light theme, keyboard focus states and reduced motion
+- Activity: the auctions this browser created or bid in
+- Network activity log showing every wallet, proof and network step
+- Near-black and ember design, responsive down to phones, with keyboard focus states and
+  `prefers-reduced-motion` support
 
 ## Quick start
 
@@ -141,7 +146,7 @@ npm run proof-server         # in a second terminal
 npm run dev
 ```
 
-Open <http://localhost:5174>. The compiled contracts are committed under `managed/`, so the
+Open <http://localhost:5174>. With no wallet the site runs on the demo market. The compiled contracts are committed under `managed/`, so the
 app runs without the Compact toolchain.
 
 ### Scripts
@@ -190,6 +195,29 @@ No variable holds a seed or key. Lace signs every transaction.
 
 Bids are commitments to pay, not escrowed funds. Escrow is on the roadmap.
 
+## Project structure
+
+```text
+src/
+  components/   Logo, labels, tiles, wallet modal, nav, footer
+  sections/     Landing sections, including the lazy Three.js hero scene
+  pages/        Home, Explore, Auction, Create, Activity, Setup
+  hooks/        useMarket (market, wallet, log), time and loaders
+  services/     Interfaces, the demo market and the Midnight services
+  lib/          Auction model and Midnight wallet plumbing
+  contracts/    auction.compact and registry.compact
+  types/        Auction, Receipt, Position
+  data/         Demo market lots
+```
+
+### Demo market and Preprod
+
+Explore and Create have a visible switch between **Midnight Preprod** and the **Demo market**.
+The demo market is sample data in the browser, applies the same rules as the contract, and is
+labelled wherever it appears. Nothing in it is sent to a network, and its receipts never carry a
+transaction identifier. Auction ids starting with `demo-` always resolve to the demo market;
+contract addresses always resolve to Preprod.
+
 ## Contract
 
 Two Compact contracts, compiled with toolchain 0.31.1 (language 0.23, compact-runtime
@@ -230,7 +258,10 @@ npm test
   commitment, and wallet-free reads.
 - **Model (9):** lifecycle, bid checks that mirror the circuit, create-form validation, and
   defensive parsing of public metadata.
-- **Components (7):** cards, countdown, badges, transaction references and routes.
+- **Demo market (6):** the same minimums and increments as the contract, seller-only cancel,
+  and a check that demo receipts never carry a transaction identifier.
+- **Components (7):** auction tiles never render a bidder, address masking, receipts,
+  countdown and lot numbers.
 
 ## CI/CD
 

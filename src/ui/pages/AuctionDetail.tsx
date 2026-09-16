@@ -30,6 +30,15 @@ export default function AuctionDetail({ api, address }: { api: MidbidApi; addres
     [api.service, api.wallet, auction.data],
   );
 
+  // Only the seller needs to know whether Browse can find this auction.
+  const listed = useLoader(
+    async () =>
+      position.data?.isSeller && api.registryAddress
+        ? (await api.service.registryListings()).includes(address)
+        : null,
+    [api.service, position.data?.isSeller, address],
+  );
+
   const [amount, setAmount] = useState('');
   const [busy, setBusy] = useState<string | null>(null);
   const [outcome, setOutcome] = useState<Outcome>(null);
@@ -345,6 +354,29 @@ export default function AuctionDetail({ api, address }: { api: MidbidApi; addres
               >
                 {busy === 'cancel' ? 'Cancelling…' : 'Cancel auction'}
               </button>
+            )}
+
+            {pos?.isSeller && listed.data === false && (
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-warn/40 bg-warn/5 px-4 py-3 text-sm">
+                <span>Not listed in Browse yet. It still opens by link.</span>
+                <button
+                  className="btn-ghost py-1.5 text-xs"
+                  disabled={!ready || busy !== null}
+                  onClick={() =>
+                    run(
+                      'list',
+                      async () => {
+                        const tx = await api.service.listAuction(a.address);
+                        listed.reload();
+                        return tx;
+                      },
+                      'Listed in Browse.',
+                    )
+                  }
+                >
+                  {busy === 'list' ? 'Listing…' : 'List in Browse'}
+                </button>
+              </div>
             )}
 
             {outcome && (

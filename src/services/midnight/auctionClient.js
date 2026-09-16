@@ -1,4 +1,4 @@
-// AuctionService: every Midnight call the app makes, behind one interface.
+// MidnightAuctionClient: every Midnight call the app makes, behind one interface.
 //
 // Components never touch midnight-js. They ask this service for auctions and
 // actions, and it returns plain objects or real transaction identifiers. There
@@ -16,8 +16,8 @@ import { CompiledContract } from '@midnight-ntwrk/compact-js';
 import * as Auction from '../../../managed/auction/contract/index.js';
 import * as Registry from '../../../managed/registry/contract/index.js';
 import { PROVENANCE, REGISTRY_ADDRESS, isContractAddress } from '../../config.js';
-import { STORED, parseMetadata, bidProblem, deriveStatus } from './model.js';
-import { toHex, fromHex, randomBytes32 } from './bytes.js';
+import { STORED, parseMetadata, bidProblem, deriveStatus } from '../../lib/auction/model.js';
+import { toHex, fromHex, randomBytes32 } from '../../lib/auction/bytes.js';
 
 export const PRIVATE_STATE_ID = 'midbid';
 
@@ -111,7 +111,7 @@ export function decodeAuction(address, contractState, now) {
   return { ...base, phase: deriveStatus(base, now) };
 }
 
-export class AuctionService {
+export class MidnightAuctionClient {
   /**
    * @param {object} opts
    * @param {object} opts.publicDataProvider  always present, needs no wallet

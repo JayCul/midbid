@@ -5,7 +5,7 @@
 // submit a transaction; it cannot read a key, and there is no seed anywhere in
 // this repo or its environment.
 
-import { PREPROD } from '../config.js';
+import { PREPROD } from '../../config.js';
 import { encodeForWallet, decodeFromWallet, watchIdentifier } from './txcodec.js';
 import { describeError } from './instrument.js';
 

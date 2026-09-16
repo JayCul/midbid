@@ -98,7 +98,14 @@ export const formatAmount = (value, unit = 'tNIGHT') =>
 
 // ------------------------------------------------------------- metadata ---
 
-export const CATEGORIES = ['Art', 'Collectibles', 'Digital goods', 'Services', 'Domains', 'Other'];
+export const CATEGORIES = [
+  'Digital Collectibles',
+  'Art',
+  'Gaming Assets',
+  'Creator Drops',
+  'Community Auctions',
+  'Private Sales',
+];
 
 export const METADATA_LIMITS = { title: 80, description: 600, imageUrl: 300 };
 
@@ -106,12 +113,12 @@ export const METADATA_LIMITS = { title: 80, description: 600, imageUrl: 300 };
  * Metadata is public: it is written into the contract so every bidder sees the
  * same listing. It never holds anything about bidders.
  */
-export function buildMetadata({ title, description = '', category = 'Other', imageUrl = '' }) {
+export function buildMetadata({ title, description = '', category = 'Art', imageUrl = '' }) {
   const clean = {
     v: 1,
     title: String(title ?? '').trim(),
     description: String(description ?? '').trim(),
-    category: CATEGORIES.includes(category) ? category : 'Other',
+    category: CATEGORIES.includes(category) ? category : 'Art',
     imageUrl: String(imageUrl ?? '').trim(),
     // Only manual settlement exists today: the winner and seller complete the
     // exchange off chain, and the seller records it with settle().
@@ -143,7 +150,7 @@ export function parseMetadata(raw) {
     return {
       title: typeof m.title === 'string' && m.title ? m.title.slice(0, 80) : 'Untitled auction',
       description: typeof m.description === 'string' ? m.description.slice(0, 600) : '',
-      category: CATEGORIES.includes(m.category) ? m.category : 'Other',
+      category: CATEGORIES.includes(m.category) ? m.category : 'Art',
       imageUrl:
         typeof m.imageUrl === 'string' && /^https:\/\/\S+$/i.test(m.imageUrl) ? m.imageUrl : '',
       settlement: 'manual',
@@ -152,7 +159,7 @@ export function parseMetadata(raw) {
     return {
       title: 'Untitled auction',
       description: '',
-      category: 'Other',
+      category: 'Art',
       imageUrl: '',
       settlement: 'manual',
     };
@@ -162,7 +169,7 @@ export function parseMetadata(raw) {
 // ---------------------------------------------------------------- terms ---
 
 export const DURATION_PRESETS = [
-  { label: '10 min', seconds: 600 },
+  { label: '10 minutes', seconds: 600 },
   { label: '1 hour', seconds: 3600 },
   { label: '24 hours', seconds: 86400 },
   { label: '3 days', seconds: 259200 },

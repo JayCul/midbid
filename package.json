@@ -17,8 +17,8 @@
     "test:contracts": "vitest run test/contracts",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "lint": "npm run typecheck && prettier --check \"src/**/*.{js,ts,tsx,css}\" \"test/**/*.{js,tsx}\" \"scripts/**/*.{js,mjs}\"",
-    "format": "prettier --write \"src/**/*.{js,ts,tsx,css}\" \"test/**/*.{js,tsx}\" \"scripts/**/*.{js,mjs}\"",
+    "lint": "npm run typecheck && prettier --check \"src/**/*.{js,ts,tsx,css}\" \"test/**/*.{js,ts,tsx}\" \"scripts/**/*.{js,mjs}\"",
+    "format": "prettier --write \"src/**/*.{js,ts,tsx,css}\" \"test/**/*.{js,ts,tsx}\" \"scripts/**/*.{js,mjs}\"",
     "proof-server": "docker run --rm -p 6300:6300 midnightntwrk/proof-server:8.1.0 midnight-proof-server -v",
     "deploy:preprod": "node scripts/deploy-preprod.mjs",
     "find": "node scripts/find-auction.mjs"
@@ -27,6 +27,7 @@
     "@testing-library/react": "^16.1.0",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
+    "@types/three": "^0.170.0",
     "@vitejs/plugin-react": "^4.7.0",
     "autoprefixer": "^10.5.5",
     "jsdom": "^25.0.1",
@@ -53,7 +54,9 @@
     "framer-motion": "^13.2.0",
     "lucide-react": "^1.43.0",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "react-router-dom": "^7.18.4",
+    "three": "^0.170.0"
   },
   "overrides": {
     "@midnight-ntwrk/onchain-runtime-v3": "3.0.0"

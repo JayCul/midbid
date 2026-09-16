@@ -3,7 +3,11 @@
 import { describe, expect, it } from 'vitest';
 import { PROVENANCE } from '../src/provenance.js';
 import { fromHex } from '../src/lib/auction/bytes.js';
-import { AuctionService, decodeAuction, explainFailure } from '../src/lib/auction/service.js';
+import {
+  MidnightAuctionClient,
+  decodeAuction,
+  explainFailure,
+} from '../src/services/midnight/auctionClient.js';
 import { AuctionSimulator, T0, bytes32 } from './contracts/simulator.js';
 
 const ADDRESS = 'ab'.repeat(32);
@@ -32,9 +36,9 @@ describe('decodeAuction', () => {
   });
 });
 
-describe('AuctionService reads', () => {
+describe('MidnightAuctionClient reads', () => {
   const serviceWith = (states) =>
-    new AuctionService({
+    new MidnightAuctionClient({
       publicDataProvider: { queryContractState: async (a) => states[a] ?? null },
     });
 

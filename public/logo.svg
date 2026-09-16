@@ -1,23 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 80">
   <defs>
     <linearGradient id="mb-gold" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#FFE14D"/>
-      <stop offset="0.5" stop-color="#FFCC15"/>
-      <stop offset="1" stop-color="#F59E0B"/>
+      <stop offset="0" stop-color="#FFB347"/>
+      <stop offset="0.5" stop-color="#FF8A00"/>
+      <stop offset="1" stop-color="#E86F00"/>
     </linearGradient>
   </defs>
-  <rect width="360" height="80" rx="16" fill="#05060a"/>
+  <rect width="360" height="80" rx="16" fill="#050505"/>
   <g transform="translate(22 12)">
     <path fill="url(#mb-gold)" d="M4 50V11c0-5 5-7.5 9-4.6L32 20.5 51 6.4C55 3.5 60 6 60 11v39l-9-6.5V21.5L32 32 13 21.5v22Z"/>
   <path fill="#000" fill-opacity=".2" d="M13 21.5 32 32v5.5L13 27Z"/>
-  <g fill="url(#mb-gold)" stroke="#05060a" stroke-width="1.6" paint-order="stroke">
+  <g fill="url(#mb-gold)" stroke="#050505" stroke-width="1.6" paint-order="stroke">
     <rect x="30.6" y="41" width="3" height="13" rx="1.5" transform="rotate(-45 32.1 47.5)"/>
     <rect x="20.5" y="36.5" width="12" height="6" rx="1.5" transform="rotate(-45 26.5 39.5)"/>
   </g>
   <rect x="17" y="53.5" width="17" height="3" rx="1.5" fill="url(#mb-gold)"/>
 
   </g>
-  <text x="102" y="55" font-family="Lexend, Poppins, 'Segoe UI', sans-serif" font-size="40" font-weight="700" letter-spacing="-1">
-    <tspan fill="#FAF8F0">Mid</tspan><tspan fill="url(#mb-gold)">Bid</tspan>
+  <text x="102" y="55" font-family="Inter, Poppins, 'Segoe UI', sans-serif" font-size="40" font-weight="700" letter-spacing="-1">
+    <tspan fill="#FFFFFF">Mid</tspan><tspan fill="url(#mb-gold)">Bid</tspan>
   </text>
 </svg>

@@ -27,7 +27,9 @@ const fromQuery = (name) => {
 // ?registry=<address> overrides it, so a fresh deployment can be tried before
 // this default changes. null means no registry yet; auctions still open by
 // direct link.
-const DEFAULT_REGISTRY_ADDRESS = env.VITE_REGISTRY_ADDRESS || null;
+// Deployed 2026-09-17, tx 37363e8a8b6d47e9558f48cb09c546c05983e9a64f4259363529371fa3226e6f.
+const DEFAULT_REGISTRY_ADDRESS =
+  env.VITE_REGISTRY_ADDRESS || 'ae709b8abed530b6256727c8a4a68b99fc7294d24eead048536d8c93617f39ec';
 export const REGISTRY_ADDRESS = fromQuery('registry') ?? DEFAULT_REGISTRY_ADDRESS;
 
 export const isContractAddress = (value) => typeof value === 'string' && HEX64.test(value);

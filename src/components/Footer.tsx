@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { Logo } from './primitives';
 
 const REPO = 'https://github.com/JayCul/midbid';
-const X_PROFILE: string | undefined = import.meta.env.VITE_X_PROFILE_URL || undefined;
+const X_PROFILE: string = import.meta.env.VITE_X_PROFILE_URL || 'https://x.com/midnight_bid';
 
 const LINKS: { label: string; to: string; external?: boolean }[] = [
   { label: 'Explore', to: '/explore' },

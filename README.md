@@ -15,9 +15,9 @@ contract, and the winner only steps forward once the auction has ended.
 | | |
 |---|---|
 | Live app | _added at deploy_ |
-| Registry contract (Preprod) | _added at deploy_ |
+| Registry contract (Preprod) | `ae709b8abed530b6256727c8a4a68b99fc7294d24eead048536d8c93617f39ec` |
 | Example auction (Preprod) | _added at deploy_ |
-| Product profile on X | _added at launch_ |
+| Product profile on X | [@midnight_bid](https://x.com/midnight_bid) |
 | Demo video | _added at submission_ |
 
 ---
@@ -141,7 +141,7 @@ itself, so the UI deriving them cannot loosen a rule.
 git clone https://github.com/JayCul/midbid.git
 cd midbid
 npm install
-cp .env.example .env.local   # set VITE_REGISTRY_ADDRESS
+cp .env.example .env.local   # optional: defaults point at the Preprod registry
 npm run proof-server         # in a second terminal
 npm run dev
 ```
@@ -170,8 +170,8 @@ All are optional and documented in [.env.example](.env.example).
 
 | Variable | Default | Purpose |
 |---|---|---|
-| `VITE_REGISTRY_ADDRESS` | none | Registry that Browse reads |
-| `VITE_X_PROFILE_URL` | none | Footer link to the product profile |
+| `VITE_REGISTRY_ADDRESS` | the Preprod registry above | Registry that Explore reads |
+| `VITE_X_PROFILE_URL` | `https://x.com/midnight_bid` | Footer link to the product profile |
 | `VITE_NETWORK_ID` | `preprod` | Must match the wallet's network |
 | `VITE_INDEXER_URL` / `VITE_INDEXER_WS_URL` | Preprod indexer | Public state reads |
 | `VITE_PROOF_SERVER_URL` | `http://127.0.0.1:6300` | Local proof generation |

@@ -14,11 +14,11 @@ contract, and the winner only steps forward once the auction has ended.
 
 | | |
 |---|---|
-| Live app | _added at deploy_ |
+| Live app | <https://midbid-plum.vercel.app> |
 | Registry contract (Preprod) | `ae709b8abed530b6256727c8a4a68b99fc7294d24eead048536d8c93617f39ec` |
-| Example auction (Preprod) | _added at deploy_ |
+| Example auction (Preprod) | `b8a264ca49771ec85fcbcdef62c4f3d66c9e7e5e44d2f2624ce5de78caf911eb` (created, bid, claimed and settled) |
 | Product profile on X | [@midnight_bid](https://x.com/midnight_bid) |
-| Demo video | _added at submission_ |
+| Demo video | <https://youtu.be/jcVihbs74zo> |
 
 ---
 

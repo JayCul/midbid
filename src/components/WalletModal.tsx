@@ -116,14 +116,22 @@ export function WalletModal() {
                 )}
 
                 {wallet.status === 'error' && wallet.error && (
-                  <p className="border-l border-bad/60 pl-3 text-[13px] leading-relaxed text-white/72">
-                    {wallet.error}
-                  </p>
+                  <div className="border-l border-bad/60 pl-3">
+                    <p className="text-[13px] leading-relaxed text-white/72">{wallet.error}</p>
+                    {/^Lace restarted/.test(wallet.error) && (
+                      <button
+                        onClick={() => window.location.reload()}
+                        className="btn-quiet mt-2 text-ember"
+                      >
+                        Reload the page
+                      </button>
+                    )}
+                  </div>
                 )}
 
                 <p className="pt-4 text-[13px] leading-relaxed text-white/48">
-                  MidBid never sees your recovery phrase. Lace signs every action, and bids are
-                  proven on your own machine.
+                  MidBid never sees your recovery phrase. Lace signs every action.{' '}
+                  {market.provingNotice}
                 </p>
               </div>
             )}

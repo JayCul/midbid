@@ -12,6 +12,11 @@
 export function describeError(err) {
   if (err == null) return String(err);
   if (typeof err === 'string') return err;
+  // Lace's own failure when its background worker restarted under the page.
+  // The raw text names an internal channel and helps nobody.
+  if (/RemoteApiShutdown|channel .* was shutdown/i.test(`${err.name ?? ''} ${err.message ?? ''}`)) {
+    return 'Lace restarted its background connection. Reload this page with Lace unlocked, then connect again.';
+  }
   if (err instanceof Error && err.message) return `${err.name}: ${err.message}`;
 
   const parts = [];

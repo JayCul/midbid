@@ -34,12 +34,49 @@ export async function findLace({ timeoutMs = 5000 } = {}) {
 }
 
 /**
+ * True for the error Lace throws when its background worker restarted under the
+ * page: the injected object is still there, but its channels are dead.
+ */
+export const isStaleConnector = (err) =>
+  /RemoteApiShutdown|can no longer be used|channel .* was shutdown/i.test(
+    `${err?.name ?? ''} ${err?.message ?? ''}`,
+  );
+
+/**
+ * Opens a session, retrying once when Lace's background worker has restarted.
+ *
+ * The retry re-discovers the connector rather than reusing the stale handle,
+ * because the object on `window.midnight` is replaced when the worker comes
+ * back. One retry only: past that it needs a reload, and saying so beats
+ * looping.
+ */
+async function openSession() {
+  const connector = await findLace();
+  try {
+    return await connector.connect(NETWORK_ID);
+  } catch (err) {
+    if (!isStaleConnector(err)) throw err;
+    await new Promise((r) => setTimeout(r, 600));
+    const fresh = await findLace({ timeoutMs: 3000 });
+    try {
+      return await fresh.connect(NETWORK_ID);
+    } catch (second) {
+      if (!isStaleConnector(second)) throw second;
+      throw new Error(
+        'Lace restarted its background connection. Reload this page with Lace unlocked, then connect again.',
+        { cause: second },
+      );
+    }
+  }
+}
+
+/**
  * Connect and return providers plus a little wallet info for the UI.
  * Connecting prompts the user in the extension; nothing happens silently.
  */
 export async function connectLace() {
+  const api = await openSession();
   const connector = await findLace();
-  const api = await connector.connect(NETWORK_ID);
 
   const [shielded, unshielded, dust] = await Promise.all([
     api.getShieldedAddresses(),

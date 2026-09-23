@@ -130,9 +130,9 @@ function useMarketState() {
     setConnectHint(null);
     const l = await loadLace();
     const next = await l.connect(() =>
-      setConnectHint('Lace is locked. Unlock it and this will continue on its own.'),
+      setConnectHint('Lace is locked. Unlock it, then press Connect again.'),
     );
-    setConnectHint(null);
+    if (next.status === 'connected') setConnectHint(null);
     setWallet(next);
     if (next.status === 'connected') {
       setLive(l.market());

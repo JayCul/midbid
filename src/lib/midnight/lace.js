@@ -53,16 +53,16 @@ export const isLocked = (err) => /wallet is locked/i.test(err?.message ?? '');
  * back. One retry only: past that it needs a reload, and saying so beats
  * looping.
  */
-async function openSession({ waitForUnlockMs = 120_000, onStatus = () => {} } = {}) {
+async function openSession({ onStatus = () => {} } = {}) {
   const connector = await findLace();
   try {
-    return await connectWaitingForUnlock(connector, waitForUnlockMs, onStatus);
+    return await connectOnce(connector, onStatus);
   } catch (err) {
     if (!isStaleConnector(err)) throw err;
     await new Promise((r) => setTimeout(r, 600));
     const fresh = await findLace({ timeoutMs: 3000 });
     try {
-      return await connectWaitingForUnlock(fresh, waitForUnlockMs, onStatus);
+      return await connectOnce(fresh, onStatus);
     } catch (second) {
       if (!isStaleConnector(second)) throw second;
       throw new Error(
@@ -74,27 +74,20 @@ async function openSession({ waitForUnlockMs = 120_000, onStatus = () => {} } = 
 }
 
 /**
- * Asks Lace for a session, and keeps asking while it is locked.
+ * Asks Lace for a session, once.
  *
- * Unlocking takes as long as it takes, and Lace refuses immediately while
- * locked. Without this, every refusal ended the attempt and the password had to
- * be entered again for the next one. Polling costs nothing: a locked wallet
- * answers instantly, and the person sees one prompt once they are in.
+ * It used to retry on a timer while the wallet was locked, so that unlocking
+ * would continue the attempt by itself. That was wrong: a browser only lets an
+ * extension open its window in response to a click, so the retries asked for a
+ * session while no prompt could appear. Every attempt is now a click, and the
+ * caller says what to do when the wallet is locked.
  */
-async function connectWaitingForUnlock(connector, waitMs, onStatus) {
-  const deadline = Date.now() + waitMs;
-  let told = false;
-  for (;;) {
-    try {
-      return await connector.connect(NETWORK_ID);
-    } catch (err) {
-      if (!isLocked(err) || Date.now() > deadline) throw err;
-      if (!told) {
-        told = true;
-        onStatus('locked');
-      }
-      await new Promise((r) => setTimeout(r, 1500));
-    }
+async function connectOnce(connector, onStatus) {
+  try {
+    return await connector.connect(NETWORK_ID);
+  } catch (err) {
+    if (isLocked(err)) onStatus('locked');
+    throw err;
   }
 }
 

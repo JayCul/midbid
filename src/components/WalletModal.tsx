@@ -109,6 +109,20 @@ export function WalletModal() {
                   </span>
                 </button>
 
+                {connecting && (
+                  <p className="border-l border-white/16 pl-3 text-[13px] leading-relaxed text-white/72">
+                    No Lace window? Click the Lace icon in your browser toolbar: the request is
+                    waiting there. Browsers only open an extension window from a click, so if the
+                    request expires, press Connect again.
+                  </p>
+                )}
+
+                {market.connectHint && !connecting && (
+                  <p className="border-l border-ember pl-3 text-[13px] leading-relaxed text-white">
+                    {market.connectHint}
+                  </p>
+                )}
+
                 {available === false && (
                   <a href={LACE_URL} target="_blank" rel="noreferrer" className="btn-quiet">
                     Install Lace <ArrowUpRight size={14} aria-hidden />

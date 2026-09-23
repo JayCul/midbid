@@ -14,6 +14,7 @@ import { connectLace, findLace } from '../../lib/midnight/lace.js';
 import { browserPasswordProvider } from '../../lib/midnight/privateStorage.js';
 import { describeError, traceObject } from '../../lib/midnight/instrument.js';
 import { maskAddress } from '../../lib/auction/view';
+import { proofServerUrl, readMode, writeMode, type ProvingMode } from '../../lib/midnight/proving';
 import { MidnightAuctionService } from './MidnightAuctionService';
 import { PilotService } from './PilotService';
 
@@ -32,6 +33,8 @@ export const DISCONNECTED: WalletState = {
 
 export class LaceWalletService implements WalletService {
   private providers: null | ((name: Name) => unknown) = null;
+  /** Cleared when proving moves between local and hosted. */
+  private sets = new Map<Name, unknown>();
   /** Held so the pilot register can publish it when the participant asks. */
   private shielded: string | null = null;
   readonly publicDataProvider = indexerPublicDataProvider(PREPROD.indexer, PREPROD.indexerWs);
@@ -71,7 +74,8 @@ export class LaceWalletService implements WalletService {
       );
 
       // One set per contract; they differ only in where circuit keys come from.
-      const sets = new Map<Name, unknown>();
+      const sets = this.sets;
+      sets.clear();
       this.providers = (name) => {
         if (!sets.has(name)) {
           const zkConfigProvider = new FetchZkConfigProvider(
@@ -84,7 +88,7 @@ export class LaceWalletService implements WalletService {
             zkConfigProvider,
             proofProvider: traceObject(
               'proofProvider',
-              httpClientProofProvider(PREPROD.proofServer, zkConfigProvider),
+              httpClientProofProvider(proofServerUrl(), zkConfigProvider),
               ['proveTx'],
               this.log,
             ),
@@ -125,6 +129,26 @@ export class LaceWalletService implements WalletService {
     this.providers = null;
     this.shielded = null;
     this.log('Disconnected. Wallet handles and providers dropped.', 'ok');
+  }
+
+  /**
+   * Moves proving between the bidder's machine and the hosted server. Provider
+   * sets are dropped so the next action builds its proof in the chosen place.
+   */
+  setProvingMode(mode: ProvingMode): ProvingMode {
+    const next = writeMode(mode);
+    this.sets.clear();
+    this.log(
+      next === 'hosted'
+        ? 'Proving moved to the hosted server. It will see your bid amount and secret.'
+        : 'Proving moved back to your machine.',
+      next === 'hosted' ? 'err' : 'ok',
+    );
+    return next;
+  }
+
+  provingMode(): ProvingMode {
+    return readMode();
   }
 
   /** The pilot register, readable without a wallet and joinable with one. */

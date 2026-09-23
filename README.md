@@ -179,6 +179,7 @@ All are optional and documented in [.env.example](.env.example).
 |---|---|---|
 | `VITE_REGISTRY_ADDRESS` | the Preprod registry above | Registry that Explore reads |
 | `VITE_PILOT_ADDRESS` | none | Pilot register that the join page reads |
+| `VITE_HOSTED_PROOF_SERVER_URL` | none | Optional hosted prover. Unset means local-only proving |
 | `VITE_X_PROFILE_URL` | `https://x.com/midnight_bid` | Footer link to the product profile |
 | `VITE_NETWORK_ID` | `preprod` | Must match the wallet's network |
 | `VITE_INDEXER_URL` / `VITE_INDEXER_WS_URL` | Preprod indexer | Public state reads |
@@ -290,6 +291,7 @@ The site deploys to Vercel from `main`. See [docs/DEPLOYMENT.md](docs/DEPLOYMENT
 - [docs/PRIVACY.md](docs/PRIVACY.md): what is disclosed, what is not, and the limits
 - [docs/THREAT-MODEL.md](docs/THREAT-MODEL.md): attackers, attacks and mitigations
 - [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md): registry, Vercel and verification
+- [docs/PROVING.md](docs/PROVING.md): local and hosted proving, and what each discloses
 - [docs/PILOT.md](docs/PILOT.md): why counting users needed a second contract
 - [docs/FEEDBACK.md](docs/FEEDBACK.md): how feedback arrives, is ranked, and what changed
 - [docs/USERS.md](docs/USERS.md): the Preprod cohort, generated from chain state

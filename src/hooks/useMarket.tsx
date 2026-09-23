@@ -15,6 +15,13 @@ import {
 import type { MarketService, WalletState } from '../services/types';
 import { MockAuctionService } from '../services/mock/MockAuctionService';
 import { checkProofServer, PROOF_SERVER_COMMAND } from '../lib/midnight/proofServer.js';
+import {
+  hostedAvailable,
+  proofServerUrl,
+  provingNotice,
+  readMode,
+  type ProvingMode,
+} from '../lib/midnight/proving';
 import { PILOT_ADDRESS, REGISTRY_ADDRESS } from '../config.js';
 
 export type MarketMode = 'live' | 'demo';
@@ -56,6 +63,7 @@ function useMarketState() {
   const [proofServerOk, setProofServerOk] = useState<boolean | null>(null);
   const [walletOpen, setWalletOpen] = useState(false);
   const [version, setVersion] = useState(0);
+  const [proving, setProving] = useState<ProvingMode>(() => readMode());
   const lace = useRef<LaceWallet | null>(null);
   const [live, setLive] = useState<MarketService | null>(null);
 
@@ -100,10 +108,20 @@ function useMarketState() {
   }, [mode, loadLace, log]);
 
   const refreshProofServer = useCallback(async () => {
-    const r = await checkProofServer();
+    const r = await checkProofServer(proofServerUrl());
     setProofServerOk(r.ok);
     return r.ok;
-  }, []);
+  }, [proving]);
+
+  /** Opt in or out of hosted proving. Never changed without the person asking. */
+  const setProvingMode = useCallback(
+    async (mode: ProvingMode) => {
+      const l = await loadLace();
+      setProving(l.setProvingMode(mode));
+      await refreshProofServer().catch(() => setProofServerOk(false));
+    },
+    [loadLace, refreshProofServer],
+  );
 
   const connect = useCallback(async () => {
     setWallet((w) => ({ ...w, status: 'connecting', error: null }));
@@ -154,6 +172,10 @@ function useMarketState() {
     proofServerOk,
     refreshProofServer,
     proofServerCommand: PROOF_SERVER_COMMAND as string,
+    proving,
+    setProvingMode,
+    provingNotice: provingNotice(proving),
+    hostedProvingAvailable: hostedAvailable(),
     registryAddress: REGISTRY_ADDRESS as string | null,
     pilotAddress: PILOT_ADDRESS as string | null,
     /** Bumps when demo data changes, so loaders can refresh. */

@@ -94,7 +94,14 @@ These are real and stated plainly.
    would be a way for someone else to claim.
 6. **Metadata is public.** Sellers are warned in the create flow not to include anything
    they would not publish.
-7. **Local key storage.** The private state password is generated per browser and kept in
+7. **Hosted proving, when a bidder opts in.** MidBid can be configured with a
+   hosted proof server. A bidder who switches to it discloses the bid amount and
+   the bidder secret to whoever runs that server, for that proof. It is off by
+   default, it cannot be enabled without the operator configuring a URL, and the
+   app repeats the cost at every point where a proof is about to be built. See
+   [PROVING.md](PROVING.md). Contract state is unchanged either way: it still
+   records no bidder.
+8. **Local key storage.** The private state password is generated per browser and kept in
    `localStorage` beside the encrypted store. This protects against casual inspection, not
    against an attacker with full access to the browser profile. Deriving it from a wallet
    signature is a planned improvement.

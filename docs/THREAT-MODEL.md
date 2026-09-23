@@ -43,6 +43,7 @@
 | 20 | Malicious host serves modified JS that exfiltrates secrets | Open source, deterministic contract build; users can run locally | Standard web-app trust in the host |
 | 21 | Malicious metadata (script injection, trackers) | Metadata is parsed defensively, only `https:` image links, rendered as text; images load with `no-referrer` | Remote images reveal the viewer's IP to the image host |
 | 22 | Seed phrase theft | The app never asks for or handles a seed; Lace signs everything | Wallet-level risks |
+| 22b | Hosted proof server logs amounts and secrets | Hosted proving is opt-in, off by default, absent unless configured, and stated at every proof; local proving is unaffected | Real for anyone who opts in; the operator is trusted for that proof |
 | 23 | Private state read from disk | AES-GCM encrypted at rest | Password is stored beside it; see PRIVACY.md limit 7 |
 
 ## Out of scope for this version

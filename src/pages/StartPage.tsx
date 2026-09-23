@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight, Check, Copy, Loader2, X } from 'lucide-react';
 import { useMarket } from '../hooks/useMarket';
-import { PageHead } from '../components/AppBits';
+import { PageHead, ProvingSwitch } from '../components/AppBits';
 import { Label } from '../components/primitives';
 
 type State = 'unknown' | 'checking' | 'ready' | 'missing';
@@ -75,6 +75,7 @@ export default function StartPage() {
   const dust = market.wallet.dust;
   const walletState: State = connected ? 'ready' : laceFound === 'missing' ? 'missing' : 'unknown';
   const dustState: State = !connected ? 'unknown' : dust && dust.balance > 0n ? 'ready' : 'missing';
+  const hosted = market.proving === 'hosted';
   const proofState: State =
     market.proofServerOk === null ? 'checking' : market.proofServerOk ? 'ready' : 'missing';
   const ready = connected && proofState === 'ready' && dustState === 'ready';
@@ -158,12 +159,19 @@ export default function StartPage() {
           )}
         </Step>
 
-        <Step n="04" title="Start your local proof server" state={proofState}>
+        <Step
+          n="04"
+          title={hosted ? 'Choose where proofs are built' : 'Start your local proof server'}
+          state={proofState}
+        >
           <p>
-            Your bid is proven on your own machine, which is what keeps the amount and your secret
-            off the network. The proof server is one Docker command.
+            A bid is a proof. Building it on your own machine is what keeps the amount and your
+            secret off the network, and that takes one Docker command. If Docker is not an option
+            today, hosted proving lets you try MidBid on Preprod without it, at the cost named
+            below.
           </p>
-          <div className="flex items-center gap-3">
+          <ProvingSwitch />
+          <div className={`flex items-center gap-3 ${hosted ? 'opacity-40' : ''}`}>
             <code className="flex-1 overflow-x-auto bg-panel px-3 py-2.5 font-mono text-[12px] text-white/72">
               {market.proofServerCommand}
             </code>

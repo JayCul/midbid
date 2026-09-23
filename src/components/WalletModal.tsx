@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowUpRight, Check, Loader2, X } from 'lucide-react';
 import { useMarket } from '../hooks/useMarket';
 import { EASE, Label, LogoMark } from './primitives';
+import { ProvingSwitch } from './AppBits';
 
 const LACE_URL = 'https://www.lace.io/';
 
@@ -161,6 +162,9 @@ export function WalletModal() {
                     </button>
                   </div>
                 )}
+                <div className="mt-6">
+                  <ProvingSwitch />
+                </div>
                 <div className="mt-7 flex items-center justify-between">
                   <span className="inline-flex items-center gap-2 text-[13px] text-white/72">
                     <Check size={14} className="text-ember" /> Only this masked address is shown

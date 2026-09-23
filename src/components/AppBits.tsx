@@ -2,7 +2,7 @@
 import { useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
+import { AlertTriangle, ChevronDown, ShieldCheck } from 'lucide-react';
 import { useMarket, type MarketMode } from '../hooks/useMarket';
 import type { Receipt } from '../types/auction';
 import { EASE, Label } from './primitives';
@@ -152,6 +152,14 @@ export function Readiness({ action }: { action: string }) {
       </div>
     );
   }
+  if (market.proofServerOk === false && market.proving === 'hosted') {
+    return (
+      <Notice tone="bad">
+        The hosted proof server is not responding. Switch proving back to your machine, or try again
+        in a moment.
+      </Notice>
+    );
+  }
   if (market.proofServerOk === false) {
     return (
       <Notice tone="warn">
@@ -180,6 +188,75 @@ export function Readiness({ action }: { action: string }) {
 export function useLiveReady() {
   const market = useMarket();
   return market.wallet.status === 'connected' && market.proofServerOk !== false;
+}
+
+/**
+ * Where proofs are built. Local is private and the default; hosted is a
+ * disclosure, so the choice states the cost in the option itself.
+ */
+export function ProvingSwitch() {
+  const market = useMarket();
+  if (!market.hostedProvingAvailable) return null;
+  const hosted = market.proving === 'hosted';
+  return (
+    <div className="border border-white/8 p-5">
+      <Label>Where your proofs are built</Label>
+      <div className="mt-4 grid gap-2 sm:grid-cols-2">
+        {[
+          {
+            id: 'local' as const,
+            title: 'On my machine',
+            body: 'Private. Needs Docker running locally.',
+          },
+          {
+            id: 'hosted' as const,
+            title: 'Hosted',
+            body: 'No setup. The server sees your bid amount and secret.',
+          },
+        ].map((o) => {
+          const on = market.proving === o.id;
+          return (
+            <button
+              key={o.id}
+              onClick={() => market.setProvingMode(o.id)}
+              aria-pressed={on}
+              className={`border p-4 text-left transition-colors ${
+                on ? 'border-ember' : 'border-white/8 hover:border-white/28'
+              }`}
+            >
+              <span className="block text-[15px]">{o.title}</span>
+              <span className="mt-1 block text-[13px] leading-relaxed text-white/48">{o.body}</span>
+            </button>
+          );
+        })}
+      </div>
+      {hosted && (
+        <p className="mt-4 flex items-start gap-2 text-[13px] leading-relaxed text-warn">
+          <AlertTriangle size={14} className="mt-0.5 shrink-0" aria-hidden />
+          {market.provingNotice} Preprod runs on test tokens, so this is a safe way to try MidBid,
+          but it is not the privacy MidBid is for. Switch back before bidding on anything real.
+        </p>
+      )}
+    </div>
+  );
+}
+
+/** One line, shown next to any button that is about to build a proof. */
+export function ProvingLine() {
+  const market = useMarket();
+  const hosted = market.proving === 'hosted';
+  return (
+    <p
+      className={`flex items-start gap-2 text-[13px] leading-relaxed ${hosted ? 'text-warn' : 'text-white/48'}`}
+    >
+      {hosted ? (
+        <AlertTriangle size={14} className="mt-0.5 shrink-0" aria-hidden />
+      ) : (
+        <ShieldCheck size={14} className="mt-0.5 shrink-0 text-ember" aria-hidden />
+      )}
+      {market.provingNotice}
+    </p>
+  );
 }
 
 export function LogPanel() {

@@ -17,7 +17,14 @@ import {
   PhaseLabel,
   PrivateBidder,
 } from '../components/primitives';
-import { DemoNotice, LogPanel, Notice, Readiness, ReceiptLine } from '../components/AppBits';
+import {
+  DemoNotice,
+  LogPanel,
+  Notice,
+  ProvingLine,
+  Readiness,
+  ReceiptLine,
+} from '../components/AppBits';
 
 type Outcome = { kind: 'ok' | 'bad'; text: string; receipt?: Receipt } | null;
 
@@ -261,14 +268,14 @@ export default function AuctionPage() {
                       : 'Proving on your machine…'
                     : 'Place private bid'}
                 </button>
-                <p
-                  id="bid-help"
-                  className="mt-4 flex items-start gap-2 text-[13px] leading-relaxed text-white/48"
-                >
-                  <ShieldCheck size={14} className="mt-0.5 shrink-0 text-ember" aria-hidden />
-                  Your bid is verified before it lands. If someone outbids you first, it is rejected
-                  and nothing is recorded.
-                </p>
+                <div id="bid-help" className="mt-4 space-y-2">
+                  {!isDemo && <ProvingLine />}
+                  <p className="flex items-start gap-2 text-[13px] leading-relaxed text-white/48">
+                    <ShieldCheck size={14} className="mt-0.5 shrink-0 text-ember" aria-hidden />
+                    Your bid is verified before it lands. If someone outbids you first, it is
+                    rejected and nothing is recorded.
+                  </p>
+                </div>
               </form>
             )}
 

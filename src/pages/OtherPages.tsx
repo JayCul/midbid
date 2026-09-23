@@ -63,7 +63,11 @@ export function ActivityPage() {
 export function SetupPage() {
   const market = useMarket();
   const [busy, setBusy] = useState(false);
-  const [result, setResult] = useState<{ address: string; receipt: Receipt } | null>(null);
+  const [result, setResult] = useState<{
+    kind: 'Auction registry' | 'Pilot register';
+    address: string;
+    receipt: Receipt;
+  } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const deploy = async () => {
@@ -71,7 +75,7 @@ export function SetupPage() {
     setError(null);
     try {
       const lace = await market.loadLace();
-      setResult(await lace.market().deployRegistry());
+      setResult({ kind: 'Auction registry', ...(await lace.market().deployRegistry()) });
     } catch (err: any) {
       setError(err?.message ?? String(err));
     } finally {
@@ -84,7 +88,7 @@ export function SetupPage() {
     setError(null);
     try {
       const lace = await market.loadLace();
-      setResult(await lace.pilot().deploy('MidBid Preprod pilot'));
+      setResult({ kind: 'Pilot register', ...(await lace.pilot().deploy('MidBid Preprod pilot')) });
     } catch (err: any) {
       setError(err?.message ?? String(err));
     } finally {
@@ -116,11 +120,11 @@ export function SetupPage() {
         </div>
       </dl>
       <div className="mt-14 space-y-6">
-        <h2 className="text-title">Deploy a registry</h2>
+        <h2 className="text-title">Deploy an auction registry</h2>
         <p className="text-[16px] leading-relaxed text-white/72">
-          Needed once per environment. Then set{' '}
-          <code className="font-mono">VITE_REGISTRY_ADDRESS</code> and rebuild, or try it first with{' '}
-          <code className="font-mono">?registry=&lt;address&gt;</code>.
+          The list Explore reads. One is already deployed, so do this only to start a fresh market.
+          Then set <code className="font-mono">VITE_REGISTRY_ADDRESS</code> and rebuild, or try it
+          first with <code className="font-mono">?registry=&lt;address&gt;</code>.
         </p>
         <Readiness action="deploy a registry" />
         <button
@@ -128,7 +132,7 @@ export function SetupPage() {
           disabled={market.wallet.status !== 'connected' || busy}
           onClick={deploy}
         >
-          {busy ? 'Approve in Lace…' : 'Deploy registry'}
+          {busy ? 'Approve in Lace…' : 'Deploy auction registry'}
         </button>
         <h2 className="text-title pt-6">Deploy a pilot register</h2>
         <p className="text-[16px] leading-relaxed text-white/72">
@@ -146,7 +150,12 @@ export function SetupPage() {
         {error && <Notice tone="bad">{error}</Notice>}
         {result && (
           <Notice tone="good">
-            <p className="text-white">Registry deployed.</p>
+            <p className="text-white">{result.kind} deployed.</p>
+            <p className="mt-1 text-[13px]">
+              {result.kind === 'Pilot register'
+                ? 'Set VITE_PILOT_ADDRESS to this address.'
+                : 'Set VITE_REGISTRY_ADDRESS to this address. This is the auction list, not the pilot register.'}
+            </p>
             <p className="mt-2 break-all font-mono text-[12px]">{result.address}</p>
             <div className="mt-2">
               <ReceiptLine receipt={result.receipt} />

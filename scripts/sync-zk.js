@@ -3,7 +3,7 @@
 // Vite never confuses them with the source modules it also imports.
 import { cpSync, mkdirSync, existsSync, rmSync } from 'node:fs';
 
-const CONTRACTS = ['auction', 'registry'];
+const CONTRACTS = ['auction', 'registry', 'pilot'];
 
 rmSync('public/zk', { recursive: true, force: true });
 mkdirSync('public/zk', { recursive: true });

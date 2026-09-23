@@ -26,10 +26,11 @@ jobs:
       - name: Pin toolchain to the Mainnet compatible line
         run: compact update 0.31
 
-      - name: Compile auction and registry
+      - name: Compile auction, registry and pilot
         run: |
           compact compile src/contracts/auction.compact managed/auction
           compact compile src/contracts/registry.compact managed/registry
+          compact compile src/contracts/pilot.compact managed/pilot
 
       # Compilation is deterministic, so the committed circuits, keys and
       # generated code must match the source exactly. This is what makes the

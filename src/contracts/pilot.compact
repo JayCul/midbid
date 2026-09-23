@@ -1,0 +1,46 @@
+// The MidBid pilot register: an opt-in, public list of people testing on Preprod.
+//
+// MidBid cannot produce a list of its bidders. That is the point of the product:
+// a bid carries a commitment, never a wallet. So when a participant wants to be
+// counted publicly, they say so here, in a separate contract, with a separate
+// transaction.
+//
+// This is selective disclosure in practice. Joining discloses one address and an
+// optional handle. It says nothing about which auctions that person bid in, what
+// they bid, or whether they bid at all.
+pragma language_version 0.23;
+
+import CompactStandardLibrary;
+
+// Roles are for reading the cohort, not for permissions.
+export enum Role { TESTER, BUILDER, SELLER, BIDDER }
+
+export ledger pilotName: Opaque<"string">;
+export ledger joinedCount: Counter;
+
+// Keyed by a hash of the address, so one address joins once. The key is what
+// enforces uniqueness; the value is what makes the list readable.
+export ledger members: Set<Bytes<32>>;
+export ledger entries: Map<Bytes<32>, Opaque<"string">>;
+export ledger roles: Map<Bytes<32>, Role>;
+
+constructor(name: Opaque<"string">) {
+  pilotName = disclose(name);
+}
+
+/**
+ * Join the pilot.
+ *
+ * `record` is the JSON the app builds: the participant's own address, an
+ * optional handle, and the time they joined. `key` is its hash, computed by the
+ * app. The contract cannot check that a caller controls the address they
+ * submit, so the evidence that an entry is genuine is the transaction itself:
+ * it was signed and paid for by a Preprod wallet. docs/PILOT.md says so plainly.
+ */
+export circuit join(key: Bytes<32>, record: Opaque<"string">, role: Role): [] {
+  assert(!members.member(disclose(key)), "this address has already joined");
+  members.insert(disclose(key));
+  entries.insert(disclose(key), disclose(record));
+  roles.insert(disclose(key), disclose(role));
+  joinedCount.increment(1);
+}

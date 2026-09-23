@@ -79,6 +79,19 @@ export function SetupPage() {
     }
   };
 
+  const deployPilot = async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      const lace = await market.loadLace();
+      setResult(await lace.pilot().deploy('MidBid Preprod pilot'));
+    } catch (err: any) {
+      setError(err?.message ?? String(err));
+    } finally {
+      setBusy(false);
+    }
+  };
+
   return (
     <div className="shell max-w-3xl pb-32">
       <PageHead label="Operator" title="Environment." />
@@ -87,6 +100,12 @@ export function SetupPage() {
           <dt className="label">Configured registry</dt>
           <dd className="mt-2 break-all font-mono text-[13px] text-white/72">
             {market.registryAddress ?? 'None'}
+          </dd>
+        </div>
+        <div className="py-5">
+          <dt className="label">Configured pilot register</dt>
+          <dd className="mt-2 break-all font-mono text-[13px] text-white/72">
+            {market.pilotAddress ?? 'None'}
           </dd>
         </div>
         <div className="py-5">
@@ -110,6 +129,19 @@ export function SetupPage() {
           onClick={deploy}
         >
           {busy ? 'Approve in Lace…' : 'Deploy registry'}
+        </button>
+        <h2 className="text-title pt-6">Deploy a pilot register</h2>
+        <p className="text-[16px] leading-relaxed text-white/72">
+          The opt-in list of Preprod testers. Also once per environment, then set{' '}
+          <code className="font-mono">VITE_PILOT_ADDRESS</code>, or try it with{' '}
+          <code className="font-mono">?pilot=&lt;address&gt;</code>.
+        </p>
+        <button
+          className="btn-secondary"
+          disabled={market.wallet.status !== 'connected' || busy}
+          onClick={deployPilot}
+        >
+          {busy ? 'Approve in Lace…' : 'Deploy pilot register'}
         </button>
         {error && <Notice tone="bad">{error}</Notice>}
         {result && (

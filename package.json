@@ -22,7 +22,8 @@
     "format": "prettier --write \"src/**/*.{js,ts,tsx,css}\" \"test/**/*.{js,ts,tsx}\" \"scripts/**/*.{js,mjs}\"",
     "proof-server": "docker run --rm -p 6300:6300 midnightntwrk/proof-server:8.1.0 midnight-proof-server -v",
     "deploy:preprod": "node scripts/deploy-preprod.mjs",
-    "find": "node scripts/find-auction.mjs"
+    "find": "node scripts/find-auction.mjs",
+    "users": "node scripts/users.mjs"
   },
   "devDependencies": {
     "@testing-library/react": "^16.1.0",

@@ -15,7 +15,7 @@ import {
 import type { MarketService, WalletState } from '../services/types';
 import { MockAuctionService } from '../services/mock/MockAuctionService';
 import { checkProofServer, PROOF_SERVER_COMMAND } from '../lib/midnight/proofServer.js';
-import { REGISTRY_ADDRESS } from '../config.js';
+import { PILOT_ADDRESS, REGISTRY_ADDRESS } from '../config.js';
 
 export type MarketMode = 'live' | 'demo';
 export type LogLine = { id: number; kind: 'info' | 'ok' | 'err'; text: string; at: number };
@@ -155,6 +155,7 @@ function useMarketState() {
     refreshProofServer,
     proofServerCommand: PROOF_SERVER_COMMAND as string,
     registryAddress: REGISTRY_ADDRESS as string | null,
+    pilotAddress: PILOT_ADDRESS as string | null,
     /** Bumps when demo data changes, so loaders can refresh. */
     version,
   };

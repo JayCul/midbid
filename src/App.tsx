@@ -11,6 +11,7 @@ import Home from './pages/Home';
 const Explore = lazy(() => import('./pages/Explore'));
 const AuctionPage = lazy(() => import('./pages/AuctionPage'));
 const CreatePage = lazy(() => import('./pages/CreatePage'));
+const JoinPage = lazy(() => import('./pages/JoinPage'));
 const ActivityPage = lazy(() =>
   import('./pages/OtherPages').then((m) => ({ default: m.ActivityPage })),
 );
@@ -51,6 +52,7 @@ function Routed() {
             <Route path="/explore" element={<Explore />} />
             <Route path="/auction/:id" element={<AuctionPage />} />
             <Route path="/create" element={<CreatePage />} />
+            <Route path="/join" element={<JoinPage />} />
             <Route path="/activity" element={<ActivityPage />} />
             <Route path="/setup" element={<SetupPage />} />
             <Route path="*" element={<NotFound />} />

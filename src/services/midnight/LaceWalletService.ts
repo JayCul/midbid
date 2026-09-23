@@ -15,11 +15,12 @@ import { browserPasswordProvider } from '../../lib/midnight/privateStorage.js';
 import { describeError, traceObject } from '../../lib/midnight/instrument.js';
 import { maskAddress } from '../../lib/auction/view';
 import { MidnightAuctionService } from './MidnightAuctionService';
+import { PilotService } from './PilotService';
 
 setNetworkId(PREPROD.networkId);
 
 type Log = (line: string, kind?: 'info' | 'ok' | 'err') => void;
-type Name = 'auction' | 'registry';
+type Name = 'auction' | 'registry' | 'pilot';
 
 export const DISCONNECTED: WalletState = {
   status: 'disconnected',
@@ -31,6 +32,8 @@ export const DISCONNECTED: WalletState = {
 
 export class LaceWalletService implements WalletService {
   private providers: null | ((name: Name) => unknown) = null;
+  /** Held so the pilot register can publish it when the participant asks. */
+  private shielded: string | null = null;
   readonly publicDataProvider = indexerPublicDataProvider(PREPROD.indexer, PREPROD.indexerWs);
 
   constructor(private readonly log: Log) {}
@@ -48,6 +51,7 @@ export class LaceWalletService implements WalletService {
     try {
       this.log('Requesting connection. Approve it in Lace.');
       const s = await connectLace();
+      this.shielded = s.addresses.shielded;
       const privateStateProvider = levelPrivateStateProvider({
         privateStateStoreName: 'midbid-private-state',
         privateStoragePasswordProvider: browserPasswordProvider(),
@@ -108,6 +112,7 @@ export class LaceWalletService implements WalletService {
       };
     } catch (err) {
       this.providers = null;
+      this.shielded = null;
       const message = describeError(err);
       this.log(message, 'err');
       return { ...DISCONNECTED, status: 'error', error: message };
@@ -118,7 +123,18 @@ export class LaceWalletService implements WalletService {
     // The connector has no revoke call, so disconnecting drops every
     // wallet-derived capability this page holds.
     this.providers = null;
+    this.shielded = null;
     this.log('Disconnected. Wallet handles and providers dropped.', 'ok');
+  }
+
+  /** The pilot register, readable without a wallet and joinable with one. */
+  pilot(): PilotService {
+    return new PilotService(
+      this.publicDataProvider,
+      this.providers ? () => this.providers!('pilot') : null,
+      () => this.shielded,
+      this.log,
+    );
   }
 
   /** A market bound to the current connection, or read-only when disconnected. */

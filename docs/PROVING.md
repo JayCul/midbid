@@ -13,6 +13,24 @@ story, so MidBid never picks for you.
 | Privacy claim | Holds in full | Reduced, and the app says so every time |
 | Recommended for | Anything you care about | Trying MidBid on Preprod test tokens |
 
+## The hosted option
+
+The hosted option is **Midnight's public Preprod proof server**,
+`https://proof-server.preprod.midnight.network`. Lace points at the same server
+by default for its own proving, so many testers are already using it without
+having thought about it.
+
+It is operated by Midnight, not by MidBid. We did not build it, we do not run it,
+and we cannot make promises about what it logs. An operator can point MidBid
+somewhere else, or remove the option, with `VITE_HOSTED_PROOF_SERVER_URL`.
+
+> **Not verified end to end yet.** MidBid pins the Mainnet-compatible toolchain
+> (Compact 0.31.1, ledger 8), and the public prover advertises a newer
+> transaction format in its error messages. Whether a MidBid bid proves cleanly
+> there is a question for a real bid on Preprod, not for a health check. This
+> note stays here until a bid has been placed through it, and
+> [FEEDBACK.md](FEEDBACK.md) records the result either way.
+
 ## Why hosted proving exists
 
 Early pilot sessions made one thing obvious: asking someone to install Docker
@@ -58,10 +76,13 @@ already trust, and this is what we recommend to anyone hosting MidBid.
 docker run -p 6300:6300 midnightntwrk/proof-server:8.1.0 midnight-proof-server -v
 ```
 
+Running your own also pins the version, which matters: a prover built for a
+different ledger version can reject transactions your client builds.
+
 Then point the build at it:
 
 ```bash
-VITE_HOSTED_PROOF_SERVER_URL=https://prover.example.com
+VITE_HOSTED_PROOF_SERVER_URL=https://prover.example.com   # or "off" to remove the option
 ```
 
 Requirements:

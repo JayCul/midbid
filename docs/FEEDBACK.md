@@ -45,6 +45,13 @@ only added once the change is merged.
 | 2026-09-23 | Building and demoing on Preprod | Getting to a first bid needs Lace, tNIGHT, DUST and a proof server, and there was no single place that said so or showed what was missing | Added the self-checking [Get ready](https://midbid-plum.vercel.app/start) page, linked from every readiness prompt | `bb86f11` |
 | 2026-09-23 | Level 5 requirements review | A privacy product cannot produce a user list, but the pilot needs verifiable participants | Added the opt-in pilot register contract, the join page, and a generated [USERS.md](USERS.md) | `e8b8fec`, `c746079` |
 
+## Open, not yet answered
+
+- **Does Midnight's public Preprod prover accept MidBid's proofs?** It is
+  reachable and allows browser requests, but MidBid pins ledger 8 and the public
+  prover advertises a newer transaction format. Needs one real bid with hosted
+  proving on. Result goes in the table above either way.
+
 ## Open questions we are asking testers
 
 These are deliberately not leading, and the answers go in the table above.

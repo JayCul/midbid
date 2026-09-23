@@ -18,8 +18,24 @@ const KEY = 'midbid.proving.v1';
 const env: Record<string, string | undefined> =
   (typeof import.meta !== 'undefined' && (import.meta.env as any)) || {};
 
-/** Configured by the operator. Without it, hosted proving is not offered. */
-export const HOSTED_PROOF_SERVER: string | null = env.VITE_HOSTED_PROOF_SERVER_URL || null;
+/**
+ * Midnight runs a public proof server for Preprod, and Lace points at it by
+ * default. It is the hosted option here too, so nobody has to run one.
+ *
+ * It is operated by Midnight, not by MidBid, and the trade-off is the same
+ * whoever runs it: the server sees the witness data for the proof it builds.
+ * Set VITE_HOSTED_PROOF_SERVER_URL to point somewhere else, or to "off" to
+ * remove the hosted option entirely.
+ */
+export const PUBLIC_PREPROD_PROVER = 'https://proof-server.preprod.midnight.network';
+
+const configured = env.VITE_HOSTED_PROOF_SERVER_URL;
+export const HOSTED_PROOF_SERVER: string | null =
+  configured === 'off' || configured === 'none'
+    ? null
+    : configured && configured.trim()
+      ? configured.trim()
+      : PUBLIC_PREPROD_PROVER;
 
 export const LOCAL_PROOF_SERVER: string = PREPROD.proofServer;
 

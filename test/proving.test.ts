@@ -22,8 +22,14 @@ describe('proving mode', () => {
     expect(p.proofServerUrl()).toBe(p.LOCAL_PROOF_SERVER);
   });
 
-  it('is not offered at all when no hosted server is configured', async () => {
+  it('offers Midnight’s public Preprod prover by default, the one Lace uses', async () => {
     const p = await load();
+    expect(p.hostedAvailable()).toBe(true);
+    expect(p.proofServerUrl('hosted')).toBe(p.PUBLIC_PREPROD_PROVER);
+  });
+
+  it('can be switched off entirely by an operator', async () => {
+    const p = await load('off');
     expect(p.hostedAvailable()).toBe(false);
     expect(p.writeMode('hosted')).toBe('local');
     expect(p.proofServerUrl('hosted')).toBe(p.LOCAL_PROOF_SERVER);

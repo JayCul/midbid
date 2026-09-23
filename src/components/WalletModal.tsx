@@ -98,7 +98,7 @@ export function WalletModal() {
                     <span className="block text-[15px]">Lace</span>
                     <span className="block text-[13px] text-white/48">
                       {connecting
-                        ? 'Approve the request in Lace'
+                        ? (market.connectHint ?? 'Approve the request in Lace')
                         : available === false
                           ? 'Not detected in this browser'
                           : 'Midnight Preprod'}

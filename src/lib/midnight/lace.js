@@ -42,6 +42,9 @@ export const isStaleConnector = (err) =>
     `${err?.name ?? ''} ${err?.message ?? ''}`,
   );
 
+/** True for Lace's "wallet is locked" refusal. */
+export const isLocked = (err) => /wallet is locked/i.test(err?.message ?? '');
+
 /**
  * Opens a session, retrying once when Lace's background worker has restarted.
  *
@@ -50,16 +53,16 @@ export const isStaleConnector = (err) =>
  * back. One retry only: past that it needs a reload, and saying so beats
  * looping.
  */
-async function openSession() {
+async function openSession({ waitForUnlockMs = 120_000, onStatus = () => {} } = {}) {
   const connector = await findLace();
   try {
-    return await connector.connect(NETWORK_ID);
+    return await connectWaitingForUnlock(connector, waitForUnlockMs, onStatus);
   } catch (err) {
     if (!isStaleConnector(err)) throw err;
     await new Promise((r) => setTimeout(r, 600));
     const fresh = await findLace({ timeoutMs: 3000 });
     try {
-      return await fresh.connect(NETWORK_ID);
+      return await connectWaitingForUnlock(fresh, waitForUnlockMs, onStatus);
     } catch (second) {
       if (!isStaleConnector(second)) throw second;
       throw new Error(
@@ -71,11 +74,36 @@ async function openSession() {
 }
 
 /**
+ * Asks Lace for a session, and keeps asking while it is locked.
+ *
+ * Unlocking takes as long as it takes, and Lace refuses immediately while
+ * locked. Without this, every refusal ended the attempt and the password had to
+ * be entered again for the next one. Polling costs nothing: a locked wallet
+ * answers instantly, and the person sees one prompt once they are in.
+ */
+async function connectWaitingForUnlock(connector, waitMs, onStatus) {
+  const deadline = Date.now() + waitMs;
+  let told = false;
+  for (;;) {
+    try {
+      return await connector.connect(NETWORK_ID);
+    } catch (err) {
+      if (!isLocked(err) || Date.now() > deadline) throw err;
+      if (!told) {
+        told = true;
+        onStatus('locked');
+      }
+      await new Promise((r) => setTimeout(r, 1500));
+    }
+  }
+}
+
+/**
  * Connect and return providers plus a little wallet info for the UI.
  * Connecting prompts the user in the extension; nothing happens silently.
  */
-export async function connectLace() {
-  const api = await openSession();
+export async function connectLace(options = {}) {
+  const api = await openSession(options);
   const connector = await findLace();
 
   const [shielded, unshielded, dust] = await Promise.all([

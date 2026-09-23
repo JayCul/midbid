@@ -64,6 +64,8 @@ function useMarketState() {
   const [walletOpen, setWalletOpen] = useState(false);
   const [version, setVersion] = useState(0);
   const [proving, setProving] = useState<ProvingMode>(() => readMode());
+  /** Set while Lace is locked, so the dialog can say what it is waiting for. */
+  const [connectHint, setConnectHint] = useState<string | null>(null);
   const lace = useRef<LaceWallet | null>(null);
   const [live, setLive] = useState<MarketService | null>(null);
 
@@ -125,8 +127,12 @@ function useMarketState() {
 
   const connect = useCallback(async () => {
     setWallet((w) => ({ ...w, status: 'connecting', error: null }));
+    setConnectHint(null);
     const l = await loadLace();
-    const next = await l.connect();
+    const next = await l.connect(() =>
+      setConnectHint('Lace is locked. Unlock it and this will continue on its own.'),
+    );
+    setConnectHint(null);
     setWallet(next);
     if (next.status === 'connected') {
       setLive(l.market());
@@ -162,6 +168,7 @@ function useMarketState() {
     loadLace,
     serviceFor,
     wallet,
+    connectHint,
     connect,
     disconnect,
     walletOpen,

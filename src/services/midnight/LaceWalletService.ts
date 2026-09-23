@@ -50,10 +50,10 @@ export class LaceWalletService implements WalletService {
     }
   }
 
-  async connect(): Promise<WalletState> {
+  async connect(onStatus: (s: 'locked') => void = () => {}): Promise<WalletState> {
     try {
       this.log('Requesting connection. Approve it in Lace.');
-      const s = await connectLace();
+      const s = await connectLace({ onStatus });
       this.shielded = s.addresses.shielded;
       const privateStateProvider = levelPrivateStateProvider({
         privateStateStoreName: 'midbid-private-state',

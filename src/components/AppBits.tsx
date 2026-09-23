@@ -138,7 +138,13 @@ export function Readiness({ action }: { action: string }) {
   if (market.wallet.status !== 'connected') {
     return (
       <div className="flex flex-wrap items-center justify-between gap-4 border border-white/8 p-5">
-        <p className="text-[14px] text-white/72">Connect Lace on Preprod to {action}.</p>
+        <p className="text-[14px] text-white/72">
+          Connect Lace on Preprod to {action}. New here?{' '}
+          <a href="/start" className="text-ember hover:underline">
+            Get ready in four steps
+          </a>
+          .
+        </p>
         <button onClick={market.openWallet} className="btn-primary h-10 px-5 text-[14px]">
           Connect Wallet
         </button>

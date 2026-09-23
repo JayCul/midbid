@@ -7,6 +7,7 @@ const X_PROFILE: string = import.meta.env.VITE_X_PROFILE_URL || 'https://x.com/m
 const LINKS: { label: string; to: string; external?: boolean }[] = [
   { label: 'Explore', to: '/explore' },
   { label: 'Create', to: '/create' },
+  { label: 'Get ready', to: '/start' },
   { label: 'Pilot', to: '/join' },
   { label: 'How it works', to: '/#how-it-works' },
   { label: 'Privacy', to: `${REPO}/blob/main/docs/PRIVACY.md`, external: true },

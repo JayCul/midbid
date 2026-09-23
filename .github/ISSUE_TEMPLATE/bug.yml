@@ -1,0 +1,28 @@
+name: Bug report
+description: Something is broken or throws an error
+title: '[bug] '
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open https://midbid-plum.vercel.app/explore
+        2. ...
+  - type: textarea
+    id: log
+    attributes:
+      label: Network activity log
+      description: Open "Network activity" on the page and paste the last lines. Never paste a seed phrase.
+      render: text
+  - type: input
+    id: environment
+    attributes:
+      label: Browser and wallet

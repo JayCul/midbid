@@ -5,6 +5,7 @@ import { MarketProvider } from './hooks/useMarket';
 import { Nav } from './components/Nav';
 import { Footer } from './components/Footer';
 import { WalletModal } from './components/WalletModal';
+import { FeedbackWidget } from './components/Feedback';
 import { EASE } from './components/primitives';
 import Home from './pages/Home';
 
@@ -12,6 +13,7 @@ const Explore = lazy(() => import('./pages/Explore'));
 const AuctionPage = lazy(() => import('./pages/AuctionPage'));
 const CreatePage = lazy(() => import('./pages/CreatePage'));
 const JoinPage = lazy(() => import('./pages/JoinPage'));
+const StartPage = lazy(() => import('./pages/StartPage'));
 const ActivityPage = lazy(() =>
   import('./pages/OtherPages').then((m) => ({ default: m.ActivityPage })),
 );
@@ -53,6 +55,7 @@ function Routed() {
             <Route path="/auction/:id" element={<AuctionPage />} />
             <Route path="/create" element={<CreatePage />} />
             <Route path="/join" element={<JoinPage />} />
+            <Route path="/start" element={<StartPage />} />
             <Route path="/activity" element={<ActivityPage />} />
             <Route path="/setup" element={<SetupPage />} />
             <Route path="*" element={<NotFound />} />
@@ -78,6 +81,7 @@ export default function App() {
         <Routed />
         <Footer />
         <WalletModal />
+        <FeedbackWidget />
       </MarketProvider>
     </BrowserRouter>
   );

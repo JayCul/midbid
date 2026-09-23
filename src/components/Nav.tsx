@@ -10,6 +10,7 @@ const LINKS = [
   { to: '/explore', label: 'Explore' },
   { to: '/#how-it-works', label: 'How it works' },
   { to: '/create', label: 'Create auction' },
+  { to: '/start', label: 'Get ready' },
   { to: '/join', label: 'Pilot' },
 ];
 

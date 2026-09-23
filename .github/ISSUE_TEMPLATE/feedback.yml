@@ -1,0 +1,52 @@
+name: Pilot feedback
+description: Tell us what happened when you used MidBid on Preprod
+title: '[feedback] '
+labels: [feedback, pilot]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for testing MidBid. Never paste a recovery phrase, a private key or
+        a seed here. A shielded address is fine if you want us to look something up.
+  - type: dropdown
+    id: task
+    attributes:
+      label: What were you doing
+      options:
+        - Connecting a wallet
+        - Getting ready (tNIGHT, DUST, proof server)
+        - Browsing auctions
+        - Creating an auction
+        - Placing a bid
+        - Claiming a win or settling
+        - Joining the pilot register
+        - Reading the site or the docs
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, and what the app did back.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected instead
+  - type: dropdown
+    id: clarity
+    attributes:
+      label: How clear was it that your bid stays private
+      options:
+        - '5 - completely clear'
+        - '4 - mostly clear'
+        - '3 - unsure'
+        - '2 - mostly unclear'
+        - '1 - not clear at all'
+  - type: input
+    id: environment
+    attributes:
+      label: Browser and wallet
+      placeholder: Chrome 140, Lace 2.x, Windows

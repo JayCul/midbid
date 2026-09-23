@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Try MidBid on Preprod
+    url: https://midbid-plum.vercel.app
+    about: The live app. The demo market needs no wallet.
+  - name: Privacy model
+    url: https://github.com/JayCul/midbid/blob/main/docs/PRIVACY.md
+    about: What MidBid discloses, what it does not, and the limits we accept.

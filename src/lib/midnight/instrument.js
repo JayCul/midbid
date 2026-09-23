@@ -12,6 +12,14 @@
 export function describeError(err) {
   if (err == null) return String(err);
   if (typeof err === 'string') return err;
+  // Lace is locked. Its own text is fine, the "APIError:" prefix is not.
+  if (/wallet is locked/i.test(err.message ?? '')) {
+    return 'Lace is locked. Open the extension, unlock it, then press Connect again.';
+  }
+  // The person closed the Lace prompt. Not an error worth shouting about.
+  if (/user (rejected|declined|denied)|request rejected/i.test(err.message ?? '')) {
+    return 'The request was declined in Lace.';
+  }
   // Lace's own failure when its background worker restarted under the page.
   // The raw text names an internal channel and helps nobody.
   if (/RemoteApiShutdown|channel .* was shutdown/i.test(`${err.name ?? ''} ${err.message ?? ''}`)) {

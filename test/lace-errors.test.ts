@@ -27,6 +27,21 @@ describe('stale Lace connector', () => {
     expect(text).not.toMatch(/feature-flags|RemoteApiShutdown/);
   });
 
+  it('turns a locked wallet into the step that fixes it', () => {
+    const locked = Object.assign(new Error('Wallet is locked. Please unlock the wallet first.'), {
+      name: 'APIError',
+    });
+    const text = describeError(locked);
+    expect(text).toMatch(/Open the extension, unlock it/i);
+    expect(text).not.toMatch(/APIError/);
+  });
+
+  it('states a declined request without alarm', () => {
+    expect(describeError(new Error('User rejected the request'))).toBe(
+      'The request was declined in Lace.',
+    );
+  });
+
   it('leaves other failures alone', () => {
     expect(describeError(new Error('Wallet is on mainnet, but this app targets preprod'))).toMatch(
       /targets preprod/,

@@ -15,6 +15,7 @@ export function WalletModal() {
 
   useEffect(() => {
     if (!market.walletOpen) return;
+    market.clearConnectHint();
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && market.closeWallet();
     window.addEventListener('keydown', onKey);
     dialog.current?.focus();
@@ -95,7 +96,11 @@ export function WalletModal() {
                     )}
                   </span>
                   <span className="flex-1">
-                    <span className="block text-[15px]">Lace</span>
+                    <span className="block text-[15px]">
+                      {wallet.status === 'error' || market.connectHint
+                        ? 'Lace · try again'
+                        : 'Lace'}
+                    </span>
                     <span className="block text-[13px] text-white/48">
                       {connecting
                         ? (market.connectHint ?? 'Approve the request in Lace')

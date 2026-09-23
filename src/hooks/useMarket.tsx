@@ -132,7 +132,6 @@ function useMarketState() {
     const next = await l.connect(() =>
       setConnectHint('Lace is locked. Unlock it, then press Connect again.'),
     );
-    if (next.status === 'connected') setConnectHint(null);
     setWallet(next);
     if (next.status === 'connected') {
       setLive(l.market());
@@ -140,6 +139,9 @@ function useMarketState() {
     }
     return next;
   }, [loadLace, refreshProofServer]);
+
+  /** Drops anything left over from a previous attempt. */
+  const clearConnectHint = useCallback(() => setConnectHint(null), []);
 
   const disconnect = useCallback(() => {
     lace.current?.disconnect();
@@ -169,6 +171,7 @@ function useMarketState() {
     serviceFor,
     wallet,
     connectHint,
+    clearConnectHint,
     connect,
     disconnect,
     walletOpen,

@@ -42,7 +42,7 @@ only added once the change is merged.
 
 | Date | Source | What we heard | What changed | Commit |
 |---|---|---|---|---|
-| 2026-09-23 | First pilot connect attempt | Connecting showed `RemoteApiShutdownError: Remote API with channel 'feature-flags' was shutdown`, which says nothing about what to do | Connect now retries once with a freshly discovered connector, and if that fails the dialog explains it in plain words with a Reload button | `pending` |
+| 2026-09-23 | First pilot connect attempt | Connecting showed `RemoteApiShutdownError: Remote API with channel 'feature-flags' was shutdown`, which says nothing about what to do | Connect now retries once with a freshly discovered connector, and if that fails the dialog explains it in plain words with a Reload button | `d3e7f6b` |
 | 2026-09-23 | Building and demoing on Preprod | Getting to a first bid needs Lace, tNIGHT, DUST and a proof server, and there was no single place that said so or showed what was missing | Added the self-checking [Get ready](https://midbid-plum.vercel.app/start) page, linked from every readiness prompt | `bb86f11` |
 | 2026-09-23 | Level 5 requirements review | A privacy product cannot produce a user list, but the pilot needs verifiable participants | Added the opt-in pilot register contract, the join page, and a generated [USERS.md](USERS.md) | `e8b8fec`, `c746079` |
 

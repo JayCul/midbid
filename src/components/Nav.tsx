@@ -9,7 +9,7 @@ import { EASE, Logo } from './primitives';
 const LINKS = [
   { to: '/explore', label: 'Explore' },
   { to: '/#how-it-works', label: 'How it works' },
-  { to: '/create', label: 'Create auction' },
+  { to: '/create', label: 'Create' },
   { to: '/start', label: 'Get ready' },
   { to: '/join', label: 'Pilot' },
 ];
@@ -37,7 +37,7 @@ export function Nav() {
           <Logo />
         </Link>
 
-        <ul className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-10 md:flex">
+        <ul className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-7 whitespace-nowrap md:flex lg:gap-9">
           {LINKS.map((l) => (
             <li key={l.to}>
               <NavLink

@@ -42,7 +42,7 @@ only added once the change is merged.
 
 | Date | Source | What we heard | What changed | Commit |
 |---|---|---|---|---|
-| 2026-09-23 | First pilot connect attempt | "I have entered my password about 2 times per connection before the timeout": every refusal while Lace was locked ended the attempt | Connecting now waits while the wallet is locked and continues by itself once it is open, saying so in the dialog | `pending3` |
+| 2026-09-23 | First pilot connect attempt | "I have entered my password about 2 times per connection before the timeout": every refusal while Lace was locked ended the attempt | Connecting now waits while the wallet is locked and continues by itself once it is open, saying so in the dialog | `5a689b5` |
 | 2026-09-23 | First pilot connect attempt | A locked wallet surfaced as `APIError: Wallet is locked`, and a declined prompt read like a failure | Both are now stated as the step that fixes them, with no library prefix | `27bfe70` |
 | 2026-09-23 | First pilot connect attempt | Connecting showed `RemoteApiShutdownError: Remote API with channel 'feature-flags' was shutdown`, which says nothing about what to do | Connect now retries once with a freshly discovered connector, and if that fails the dialog explains it in plain words with a Reload button | `d3e7f6b` |
 | 2026-09-23 | Building and demoing on Preprod | Getting to a first bid needs Lace, tNIGHT, DUST and a proof server, and there was no single place that said so or showed what was missing | Added the self-checking [Get ready](https://midbid-plum.vercel.app/start) page, linked from every readiness prompt | `bb86f11` |

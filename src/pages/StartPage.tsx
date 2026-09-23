@@ -1,7 +1,7 @@
 // Get ready: the four things a Preprod bidder needs, each with live status.
 //
-// Written because the first pilot testers all stalled in the same places, and a
-// checklist that checks itself beats a page of instructions.
+// Every one of these bit us while building on Preprod, so a checklist that
+// checks itself beats a page of instructions. Pilot feedback edits this page.
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight, Check, Copy, Loader2, X } from 'lucide-react';

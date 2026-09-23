@@ -19,6 +19,9 @@ contract, and the winner only steps forward once the auction has ended.
 | Example auction (Preprod) | `b8a264ca49771ec85fcbcdef62c4f3d66c9e7e5e44d2f2624ce5de78caf911eb` (created, bid, claimed and settled) |
 | Product profile on X | [@midnight_bid](https://x.com/midnight_bid) |
 | Demo video | <https://youtu.be/jcVihbs74zo> |
+| Pilot register (Preprod) | _deploying_ |
+| Preprod users | [docs/USERS.md](docs/USERS.md), generated from the register |
+| Feedback loop | [docs/FEEDBACK.md](docs/FEEDBACK.md) |
 
 ---
 
@@ -120,6 +123,9 @@ itself, so the UI deriving them cannot loosen a rule.
 - A private "your position" panel computed only on your device: whether you lead, and your
   own bid history
 - Winner claim, unsold closing, seller settlement and seller cancellation before any bid
+- A self-checking [Get ready](https://midbid-plum.vercel.app/start) page for wallet, DUST and proof server
+- An opt-in pilot register, so participation can be public while bidding stays private
+- Structured feedback from inside the app, straight into GitHub issues
 - Activity: the auctions this browser created or bid in
 - Network activity log showing every wallet, proof and network step
 - Near-black and ember design, responsive down to phones, with keyboard focus states and
@@ -163,6 +169,7 @@ app runs without the Compact toolchain.
 | `npm run proof-server` | Start the Midnight proof server on port 6300 |
 | `npm run deploy:preprod` | Check the configured registry exists on Preprod, then build |
 | `npm run find -- <address>` | Read any auction from the indexer and check it is genuine |
+| `npm run users -- <address>` | Regenerate docs/USERS.md from the pilot register |
 
 ### Environment variables
 
@@ -171,6 +178,7 @@ All are optional and documented in [.env.example](.env.example).
 | Variable | Default | Purpose |
 |---|---|---|
 | `VITE_REGISTRY_ADDRESS` | the Preprod registry above | Registry that Explore reads |
+| `VITE_PILOT_ADDRESS` | none | Pilot register that the join page reads |
 | `VITE_X_PROFILE_URL` | `https://x.com/midnight_bid` | Footer link to the product profile |
 | `VITE_NETWORK_ID` | `preprod` | Must match the wallet's network |
 | `VITE_INDEXER_URL` / `VITE_INDEXER_WS_URL` | Preprod indexer | Public state reads |
@@ -282,6 +290,9 @@ The site deploys to Vercel from `main`. See [docs/DEPLOYMENT.md](docs/DEPLOYMENT
 - [docs/PRIVACY.md](docs/PRIVACY.md): what is disclosed, what is not, and the limits
 - [docs/THREAT-MODEL.md](docs/THREAT-MODEL.md): attackers, attacks and mitigations
 - [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md): registry, Vercel and verification
+- [docs/PILOT.md](docs/PILOT.md): why counting users needed a second contract
+- [docs/FEEDBACK.md](docs/FEEDBACK.md): how feedback arrives, is ranked, and what changed
+- [docs/USERS.md](docs/USERS.md): the Preprod cohort, generated from chain state
 
 ## Roadmap
 

@@ -1,5 +1,6 @@
 // Pieces used by the application pages: market switch, readiness, receipts, log.
 import { useState, type ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { useMarket, type MarketMode } from '../hooks/useMarket';
@@ -140,9 +141,9 @@ export function Readiness({ action }: { action: string }) {
       <div className="flex flex-wrap items-center justify-between gap-4 border border-white/8 p-5">
         <p className="text-[14px] text-white/72">
           Connect Lace on Preprod to {action}. New here?{' '}
-          <a href="/start" className="text-ember hover:underline">
+          <Link to="/start" className="text-ember hover:underline">
             Get ready in four steps
-          </a>
+          </Link>
           .
         </p>
         <button onClick={market.openWallet} className="btn-primary h-10 px-5 text-[14px]">
